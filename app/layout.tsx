@@ -11,7 +11,8 @@ import Footer from "./_components/Footer";
 
 export const metadata: Metadata = {
   title: "ExitFlight Ticket Generator",
-  description: "Create realistic mock flight tickets for presentations and fun.",
+  description:
+    "Create realistic mock flight tickets for presentations and fun.",
 };
 
 export default function RootLayout({
@@ -21,7 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     // Use the variable names from the corrected imports
-    <html lang="en" className={`dark ${GeistSans.variable} ${GeistMono.variable}`}>
+    <html
+      lang="en"
+      className={`dark ${GeistSans.variable} ${GeistMono.variable}`}
+    >
       <body className="font-sans antialiased bg-background text-foreground">
         <FlightProvider>
           <TooltipProvider>

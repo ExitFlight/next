@@ -1,5 +1,5 @@
 // app/passenger-details/page.tsx
-'use client';
+"use client";
 
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -9,63 +9,93 @@ import { ArrowLeft, ArrowRight, RefreshCcw } from "lucide-react";
 
 // Component Imports
 import { Button } from "@/app/_components/forms/Button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/app/_components/forms/Form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/app/_components/forms/Form";
 import { Input } from "@/app/_components/forms/Input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/_components/forms/Select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/app/_components/forms/Select";
 import { Card, CardContent } from "@/app/_components/Card";
 import ProgressStepper from "@/app/_components/ProgressStepper";
 
 // Context and Schema
 import { useFlightContext } from "@/app/context/FlightContext";
-import { passengerDetailsSchema, type PassengerDetailsForm } from "@/src/types/schema";
+import {
+  passengerDetailsSchema,
+  type PassengerDetailsForm,
+} from "@/src/types/schema";
 
 // --- Constants ---
 const LOCAL_STORAGE_KEY = "exitFlightPassengerDetails";
 const titles = [
-  { value: "Mr", label: "Mr." }, { value: "Mrs", label: "Mrs." },
-  { value: "Ms", label: "Ms." }, { value: "Miss", label: "Miss" },
-  { value: "Dr", label: "Dr." }, { value: "Prof", label: "Prof." },
+  { value: "Mr", label: "Mr." },
+  { value: "Mrs", label: "Mrs." },
+  { value: "Ms", label: "Ms." },
+  { value: "Miss", label: "Miss" },
+  { value: "Dr", label: "Dr." },
+  { value: "Prof", label: "Prof." },
 ];
 const nationalities = [
-  { value: "us", label: "United States" }, { value: "ca", label: "Canada" },
-  { value: "uk", label: "United Kingdom" }, { value: "au", label: "Australia" },
+  { value: "us", label: "United States" },
+  { value: "ca", label: "Canada" },
+  { value: "uk", label: "United Kingdom" },
+  { value: "au", label: "Australia" },
   // Add other common nationalities here or use the full list if you prefer
 ].sort((a, b) => a.label.localeCompare(b.label));
 const emptyFormDefaults: PassengerDetailsForm = {
-    title: "", firstName: "", middleName: "", lastName: "", email: "", phone: "", nationality: "",
+  title: "",
+  firstName: "",
+  middleName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  nationality: "",
 };
-
 
 // --- Helper Functions ---
 const saveToStorage = (details: PassengerDetailsForm) => {
-    try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(details));
-    } catch (error) {
-      console.error("Error saving passenger details to localStorage:", error);
-    }
+  try {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(details));
+  } catch (error) {
+    console.error("Error saving passenger details to localStorage:", error);
+  }
 };
 
 const loadFromStorage = (): PassengerDetailsForm | null => {
-    if (typeof window === "undefined") return null;
-    try {
-        const savedDetails = localStorage.getItem(LOCAL_STORAGE_KEY);
-        return savedDetails ? JSON.parse(savedDetails) : null;
-    } catch (error) {
-        console.error("Error loading passenger details from localStorage:", error);
-        return null;
-    }
+  if (typeof window === "undefined") return null;
+  try {
+    const savedDetails = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return savedDetails ? JSON.parse(savedDetails) : null;
+  } catch (error) {
+    console.error("Error loading passenger details from localStorage:", error);
+    return null;
+  }
 };
-
 
 // --- The Component ---
 const PassengerDetailsPage = () => {
   const router = useRouter();
-  const { selectedFlight, passengerDetails: contextPassengerDetails, setPassengerDetails } = useFlightContext();
+  const {
+    selectedFlight,
+    passengerDetails: contextPassengerDetails,
+    setPassengerDetails,
+  } = useFlightContext();
 
   const form = useForm<PassengerDetailsForm>({
     resolver: zodResolver(passengerDetailsSchema),
     // Simplified default value logic: Use context first, then storage, then empty.
-    defaultValues: contextPassengerDetails || loadFromStorage() || emptyFormDefaults,
+    defaultValues:
+      contextPassengerDetails || loadFromStorage() || emptyFormDefaults,
   });
 
   // Effect to guard the page and set the title
@@ -81,7 +111,7 @@ const PassengerDetailsPage = () => {
 
   const onSubmit = (data: PassengerDetailsForm) => {
     setPassengerDetails(data); // Update the context
-    saveToStorage(data);      // Persist for next time
+    saveToStorage(data); // Persist for next time
     // Navigate to the next step. Let's combine the preview/generate/confirmation flow later.
     // For now, let's assume a single final page.
     router.push("/ticket-preview");
@@ -98,86 +128,172 @@ const PassengerDetailsPage = () => {
       <ProgressStepper currentStep={2} />
       <div className="max-w-3xl mx-auto">
         <div className="flex justify-between items-center mb-4 md:mb-6">
-            <h2 className="text-xl md:text-2xl font-semibold text-foreground">Passenger Details</h2>
-            <Button variant="outline" size="sm" onClick={handleReset} className="text-muted-foreground hover:text-destructive">
-                <RefreshCcw className="mr-2 h-4 w-4" /> Reset Form
-            </Button>
+          <h2 className="text-xl md:text-2xl font-semibold text-foreground">
+            Passenger Details
+          </h2>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleReset}
+            className="text-muted-foreground hover:text-destructive"
+          >
+            <RefreshCcw className="mr-2 h-4 w-4" /> Reset Form
+          </Button>
         </div>
         <Card className="border-border bg-card">
           <CardContent className="p-4 md:p-6">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                
-                <FormField control={form.control} name="title" render={({ field }) => (
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Title (Optional)</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl><SelectTrigger><SelectValue placeholder="Select title" /></SelectTrigger></FormControl>
-                            <SelectContent>{titles.map((t) => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}</SelectContent>
-                        </Select>
-                        <FormMessage />
+                      <FormLabel>Title (Optional)</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select title" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {titles.map((t) => (
+                            <SelectItem key={t.value} value={t.value}>
+                              {t.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
                     </FormItem>
-                )} />
+                  )}
+                />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
-                  <FormField control={form.control} name="firstName" render={({ field }) => (
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
                       <FormItem>
-                          <FormLabel>First Name *</FormLabel>
-                          <FormControl><Input placeholder="Enter first name" {...field} /></FormControl>
-                          <FormMessage />
+                        <FormLabel>First Name *</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter first name" {...field} />
+                        </FormControl>
+                        <FormMessage />
                       </FormItem>
-                  )} />
-                  <FormField control={form.control} name="middleName" render={({ field }) => (
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="middleName"
+                    render={({ field }) => (
                       <FormItem>
-                          <FormLabel>Middle Name/Initial (Optional)</FormLabel>
-                          <FormControl><Input placeholder="Enter middle name" {...field} /></FormControl>
-                          <FormMessage />
+                        <FormLabel>Middle Name/Initial (Optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter middle name" {...field} />
+                        </FormControl>
+                        <FormMessage />
                       </FormItem>
-                  )} />
+                    )}
+                  />
                 </div>
 
-                <FormField control={form.control} name="lastName" render={({ field }) => (
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Last Name *</FormLabel>
-                        <FormControl><Input placeholder="Enter last name" {...field} /></FormControl>
-                        <FormMessage />
+                      <FormLabel>Last Name *</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter last name" {...field} />
+                      </FormControl>
+                      <FormMessage />
                     </FormItem>
-                )} />
-                
+                  )}
+                />
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
-                  <FormField control={form.control} name="email" render={({ field }) => (
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
                       <FormItem>
-                          <FormLabel>Email Address *</FormLabel>
-                          <FormControl><Input type="email" placeholder="your@email.com" {...field} /></FormControl>
-                          <FormMessage />
-                      </FormItem>
-                  )} />
-                  <FormField control={form.control} name="phone" render={({ field }) => (
-                      <FormItem>
-                          <FormLabel>Phone Number (Optional)</FormLabel>
-                          <FormControl><Input type="tel" placeholder="+1 (555) 123-4567" {...field} /></FormControl>
-                          <FormMessage />
-                      </FormItem>
-                  )} />
-                </div>
-                
-                <FormField control={form.control} name="nationality" render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Nationality *</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl><SelectTrigger><SelectValue placeholder="Select nationality" /></SelectTrigger></FormControl>
-                            <SelectContent>{nationalities.map((n) => <SelectItem key={n.value} value={n.value}>{n.label}</SelectItem>)}</SelectContent>
-                        </Select>
+                        <FormLabel>Email Address *</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="email"
+                            placeholder="your@email.com"
+                            {...field}
+                          />
+                        </FormControl>
                         <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Phone Number (Optional)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="tel"
+                            placeholder="+1 (555) 123-4567"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="nationality"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nationality *</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select nationality" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {nationalities.map((n) => (
+                            <SelectItem key={n.value} value={n.value}>
+                              {n.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
                     </FormItem>
-                )} />
-                
+                  )}
+                />
+
                 <div className="mt-8 flex justify-between">
-                  <Button type="button" variant="outline" onClick={() => router.back()}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.back()}
+                  >
                     <ArrowLeft className="mr-2" size={16} /> Back
                   </Button>
                   <Button type="submit">
-                    Continue to Preview <ArrowRight className="ml-2" size={16} />
+                    Continue to Preview{" "}
+                    <ArrowRight className="ml-2" size={16} />
                   </Button>
                 </div>
               </form>

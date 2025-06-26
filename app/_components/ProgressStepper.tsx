@@ -1,6 +1,6 @@
 import { cn } from "@/src/lib/utils";
 
-import { usePathname } from 'next/navigation'
+import { usePathname } from "next/navigation";
 
 type Step = {
   id: number;
@@ -19,7 +19,7 @@ const steps: Step[] = [
 ];
 
 const ProgressStepper = ({ currentStep }: ProgressStepperProps) => {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <div className="mb-8 md:mb-12 max-w-3xl mx-auto">

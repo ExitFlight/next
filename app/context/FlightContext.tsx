@@ -23,9 +23,12 @@ interface FlightContextType {
 const FlightContext = createContext<FlightContextType | undefined>(undefined);
 
 export const FlightProvider = ({ children }: { children: ReactNode }) => {
-  const [flightDetails, setFlightDetails] = useState<FlightSearchData | null>(null);
+  const [flightDetails, setFlightDetails] = useState<FlightSearchData | null>(
+    null,
+  );
   const [selectedFlight, setSelectedFlight] = useState<MockFlight | null>(null);
-  const [passengerDetails, setPassengerDetails] = useState<PassengerDetailsForm | null>(null);
+  const [passengerDetails, setPassengerDetails] =
+    useState<PassengerDetailsForm | null>(null);
   const [generatedTicket, setGeneratedTicket] = useState<any | null>(null);
 
   const resetFlightContext = () => {

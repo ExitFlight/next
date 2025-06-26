@@ -9,7 +9,7 @@ const Header = () => {
           <div className="flex items-center cursor-pointer">
             <Plane className="text-primary text-2xl mr-2" />
             <h1 className="text-2xl font-bold text-foreground">
-             Exit<span className="text-primary">Flight</span>
+              Exit<span className="text-primary">Flight</span>
             </h1>
           </div>
         </Link>

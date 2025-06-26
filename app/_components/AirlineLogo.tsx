@@ -8,7 +8,12 @@ type AirlineLogoProps = {
   size?: number;
 };
 
-const AirlineLogo = ({ airlineLogo, airlineName, className = "", size = 40 }: AirlineLogoProps) => {
+const AirlineLogo = ({
+  airlineLogo,
+  airlineName,
+  className = "",
+  size = 40,
+}: AirlineLogoProps) => {
   const renderLogo = () => {
     switch (airlineLogo) {
       case "american-airlines":
@@ -25,7 +30,10 @@ const AirlineLogo = ({ airlineLogo, airlineName, className = "", size = 40 }: Ai
   };
 
   return (
-    <div className={`flex items-center justify-center ${className}`} title={airlineName}>
+    <div
+      className={`flex items-center justify-center ${className}`}
+      title={airlineName}
+    >
       {renderLogo()}
     </div>
   );

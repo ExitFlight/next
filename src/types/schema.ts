@@ -3,18 +3,14 @@
 import { z } from "zod";
 
 // ====== FORM & CONTEXT TYPES ======
-
-// The data captured from the flight selection form
 export type FlightSearchData = {
   departureAirport: string;
   arrivalAirport: string;
   departureDate: string;
   departureTime: string;
-  // This will hold all the calculated details like arrival time, duration, etc.
   calculatedFlightData: EnhancedFlightDetails;
 };
 
-// The Zod schema for validating the passenger details form
 export const passengerDetailsSchema = z.object({
   title: z.string().optional(),
   firstName: z.string().min(1, { message: "First name is required." }),
@@ -27,13 +23,9 @@ export const passengerDetailsSchema = z.object({
 
 export type PassengerDetailsForm = z.infer<typeof passengerDetailsSchema>;
 
-
 // ====== MOCK FLIGHT DATA STRUCTURES ======
-// These types represent the "mock" data we generate and pass between pages.
-
-// Represents a generated flight, including all calculated details
 export type MockFlight = {
-  id: number; // A mock ID
+  id: number;
   flightNumber: string;
   airline: {
     id: number;
@@ -43,30 +35,19 @@ export type MockFlight = {
     region?: string;
   };
   departure: {
-    airport: {
-      code: string;
-      name: string;
-      city: string;
-      country: string;
-    };
-    time: string; // e.g., "09:00"
-    date: string; // e.g., "2024-12-25"
+    airport: { code: string; name: string; city: string; country: string };
+    time: string;
+    date: string;
   };
   arrival: {
-    airport: {
-      code: string;
-      name: string;
-      city: string;
-      country: string;
-    };
-    time: string; // e.g., "11:30"
-    date: string; // e.g., "2024-12-25"
+    airport: { code: string; name: string; city: string; country: string };
+    time: string;
+    date: string;
   };
-  duration: string; // e.g., "2h 30m"
-  class: string; // e.g., "Economy"
+  duration: string;
+  class: string;
 };
 
-// Represents a fully generated ticket for the final page
 export type GeneratedTicket = {
   flight: MockFlight;
   passenger: PassengerDetailsForm;
@@ -76,42 +57,42 @@ export type GeneratedTicket = {
   boardingTime: string;
 };
 
-
 // ====== UTILITY TYPES ======
-// These are used by the flight calculator utility
 
+// THIS IS THE FIX: The updated interface now includes all calculated properties.
 export interface EnhancedFlightDetails {
+  // Input properties
   departureAirport: string;
   departureAirportName: string;
   arrivalAirport: string;
   arrivalAirportName: string;
-  departureDate: string;
   departureTime: string;
-  arrivalDate: string;
-  arrivalTime: string;
   flightNumber: string;
+  cabin: string;
+
+  // Calculated properties that were missing from the old type
+  durationFormatted: string;
+  departureTimeLocal: string;
+  arrivalTimeLocal: string;
+  departureDateLocal: string;
+  arrivalDateLocal: string;
+  durationMinutes: number;
+  departureUTC: Date;
+  arrivalUTC: Date;
+  distanceKm: number;
+  timezoneDifference: string;
+  dayChange: number;
+  exitDay: string;
+
+  // This one is needed from the original `flightData` object but wasn't in the calculator return type
+  departureDate: string;
+
+  // Airline info is also part of the final object
   airline: {
     id: number;
     code: string;
     name: string;
     logo?: string;
     region?: string;
-  };
-  duration: string;
-  cabin: string;
-  distanceKm: number;
-  calculatedData: {
-    timezoneDifference?: string;
-    dayChange?: number;
-    exitDay?: string;
-    durationFormatted?: string;
-    departureTimeLocal?: string;
-    arrivalTimeLocal?: string;
-    departureDateLocal?: string;
-    arrivalDateLocal?: string;
-    durationMinutes?: number;
-    departureUTC?: Date;
-    arrivalUTC?: Date;
-    distanceKm?: number;
   };
 }

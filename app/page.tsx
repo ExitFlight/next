@@ -45,10 +45,22 @@ const Home = () => {
           Ready for your journey?
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
-          <GalleryImage src="https://images.unsplash.com/photo-1536584754829-12214d404f32?w=500&h=300&auto=format&fit=crop" alt="Airplane flying through clouds" />
-          <GalleryImage src="https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=500&h=300&auto=format&fit=crop" alt="View from airplane window" />
-          <GalleryImage src="https://images.unsplash.com/photo-1455156218388-5e61b526818b?w=500&h=300&auto=format&fit=crop" alt="Snow-capped mountain peak" />
-          <GalleryImage src="https://images.unsplash.com/photo-1573790387438-4da905039392?w=500&h=300&auto=format&fit=crop" alt="Tropical island in Indonesia" />
+          <GalleryImage
+            src="https://images.unsplash.com/photo-1536584754829-12214d404f32?w=500&h=300&auto=format&fit=crop"
+            alt="Airplane flying through clouds"
+          />
+          <GalleryImage
+            src="https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=500&h=300&auto=format&fit=crop"
+            alt="View from airplane window"
+          />
+          <GalleryImage
+            src="https://images.unsplash.com/photo-1455156218388-5e61b526818b?w=500&h=300&auto=format&fit=crop"
+            alt="Snow-capped mountain peak"
+          />
+          <GalleryImage
+            src="https://images.unsplash.com/photo-1573790387438-4da905039392?w=500&h=300&auto=format&fit=crop"
+            alt="Tropical island in Indonesia"
+          />
         </div>
       </div>
     </div>
@@ -56,7 +68,15 @@ const Home = () => {
 };
 
 // Helper components to keep the main component clean
-const FeatureCard = ({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) => (
+const FeatureCard = ({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) => (
   <Card className="border-border bg-card">
     <CardContent className="pt-6">
       <div className="bg-primary/10 text-primary rounded-full w-12 h-12 flex items-center justify-center mb-4">

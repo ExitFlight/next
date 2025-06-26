@@ -44,7 +44,7 @@ export function AirportCombobox({
 
   // Find the full airport object from the selected value code
   const selectedAirport = airports.find(
-    (airport) => airport.code.toLowerCase() === value.toLowerCase()
+    (airport) => airport.code.toLowerCase() === value.toLowerCase(),
   );
 
   return (
@@ -82,7 +82,7 @@ export function AirportCombobox({
                       "mr-2 h-4 w-4",
                       value.toLowerCase() === airport.code.toLowerCase()
                         ? "opacity-100"
-                        : "opacity-0"
+                        : "opacity-0",
                     )}
                   />
                   {airport.code} - {airport.name}

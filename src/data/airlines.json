@@ -1,0 +1,166 @@
+[
+  {
+    "code": "AF",
+    "name": "Air France"
+  },
+  {
+    "code": "AC",
+    "name": "Air Canada"
+  },
+  {
+    "code": "AK",
+    "name": "AirAsia"
+  },
+  {
+    "code": "AS",
+    "name": "Alaska Airlines"
+  },
+  {
+    "code": "AA",
+    "name": "American Airlines"
+  },
+  {
+    "code": "AV",
+    "name": "Avianca"
+  },
+  {
+    "code": "BA",
+    "name": "British Airways"
+  },
+  {
+    "code": "CX",
+    "name": "Cathay Pacific"
+  },
+  {
+    "code": "CZ",
+    "name": "China Southern"
+  },
+  {
+    "code": "CM",
+    "name": "Copa Airlines"
+  },
+  {
+    "code": "DL",
+    "name": "Delta Air Lines"
+  },
+  {
+    "code": "MS",
+    "name": "EgyptAir"
+  },
+  {
+    "code": "EK",
+    "name": "Emirates"
+  },
+  {
+    "code": "EY",
+    "name": "Etihad Airways"
+  },
+  {
+    "code": "GA",
+    "name": "Garuda Indonesia"
+  },
+  {
+    "code": "HA",
+    "name": "Hawaiian Airlines"
+  },
+  {
+    "code": "JL",
+    "name": "Japan Airlines"
+  },
+  {
+    "code": "B6",
+    "name": "JetBlue Airways"
+  },
+  {
+    "code": "JQ",
+    "name": "Jetstar"
+  },
+  {
+    "code": "KL",
+    "name": "KLM Royal Dutch Airlines"
+  },
+  {
+    "code": "KE",
+    "name": "Korean Air"
+  },
+  {
+    "code": "LR",
+    "name": "LACSA (Avianca Costa Rica)"
+  },
+  {
+    "code": "LA",
+    "name": "LATAM Chile"
+  },
+  {
+    "code": "LP",
+    "name": "LATAM Perú"
+  },
+  {
+    "code": "MH",
+    "name": "Malaysia Airlines"
+  },
+  {
+    "code": "NZ",
+    "name": "Air New Zealand"
+  },
+  {
+    "code": "DY",
+    "name": "Norwegian Air"
+  },
+  {
+    "code": "QF",
+    "name": "Qantas"
+  },
+  {
+    "code": "QR",
+    "name": "Qatar Airways"
+  },
+  {
+    "code": "AT",
+    "name": "Royal Air Maroc"
+  },
+  {
+    "code": "SK",
+    "name": "SAS Scandinavian"
+  },
+  {
+    "code": "SQ",
+    "name": "Singapore Airlines"
+  },
+  {
+    "code": "SA",
+    "name": "South African Airways"
+  },
+  {
+    "code": "WN",
+    "name": "Southwest Airlines"
+  },
+  {
+    "code": "EQ",
+    "name": "TAME"
+  },
+  {
+    "code": "TG",
+    "name": "Thai Airways"
+  },
+  {
+    "code": "UA",
+    "name": "United Airlines"
+  },
+  {
+    "code": "VN",
+    "name": "Vietnam Airlines"
+  },
+  {
+    "code": "VA",
+    "name": "Virgin Australia"
+  },
+  {
+    "code": "VS",
+    "name": "Virgin Atlantic"
+  },
+  {
+    "code": "AM",
+    "name": "Aeroméxico"
+  }
+]

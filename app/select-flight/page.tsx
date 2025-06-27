@@ -32,20 +32,16 @@ import { Input } from "@/app/_components/forms/Input";
 import { Label } from "@/app/_components/forms/Label";
 import { Badge } from "@/app/_components/Badge";
 import ProgressStepper from "@/app/_components/ProgressStepper";
-import { AirportCombobox } from "@/app/_components/forms/AirportCombobox"; // <-- IMPORT OUR NEW COMPONENT
+import { AirportCombobox } from "@/app/_components/forms/AirportCombobox";
 
 // Context and Utils
 import { useFlightContext } from "@/app/context/FlightContext";
 import { calculateEnhancedFlightDetails } from "@/src/lib/enhancedFlightCalculator";
 import { allAirlines } from "@/src/lib/airlineUtil";
-import { majorAirports } from "@/src/constants/majorAirports";
 import { MockFlight, EnhancedFlightDetails } from "@/src/types/schema";
-import { formatDistance } from "@/src/lib/utils";
+import { formatDistance } from "@/src/lib/helper";
+import allAirports from "@/src/data/airports.json";
 
-// --- Constants and Type Definitions ---
-const allAirportsFlat = Object.values(majorAirports)
-  .flat()
-  .sort((a, b) => a.code.localeCompare(b.code));
 const hourOptions = Array.from({ length: 24 }, (_, i) =>
   i.toString().padStart(2, "0"),
 );
@@ -60,11 +56,10 @@ const cabinClasses = [
 ];
 const LOCAL_STORAGE_KEY = "exitFlightFormState";
 
-// A simplified state object for our form
 interface FlightFormState {
   departureAirport: string;
   destinationAirport: string;
-  departureDate: string; // Store as ISO string 'YYYY-MM-DD'
+  departureDate: string;
   departureHour: string;
   departureMinute: string;
   selectedAirline: string;
@@ -72,13 +67,11 @@ interface FlightFormState {
   selectedCabin: string;
 }
 
-// --- The Component ---
 const SelectFlightPage = () => {
   const router = useRouter();
   const { setFlightDetails, setSelectedFlight } = useFlightContext();
   const ticketPreviewRef = useRef<HTMLDivElement>(null);
 
-  // --- State Management ---
   const [formState, setFormState] = useState<FlightFormState>({
     departureAirport: "",
     destinationAirport: "",
@@ -97,8 +90,8 @@ const SelectFlightPage = () => {
   const [error, setError] = useState<string>("");
   const [isDepartureCalendarOpen, setIsDepartureCalendarOpen] = useState(false);
 
-  // --- Effects ---
   useEffect(() => {
+    document.title = "Select Flight - ExitFlight";
     try {
       const savedState = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (savedState) setFormState(JSON.parse(savedState));
@@ -120,7 +113,6 @@ const SelectFlightPage = () => {
     }
   }, [flightData]);
 
-  // --- Event Handlers ---
   const handleFormChange = (field: keyof FlightFormState, value: string) => {
     setFormState((prevState) => ({ ...prevState, [field]: value }));
   };
@@ -184,10 +176,11 @@ const SelectFlightPage = () => {
       );
 
       const airlineInfo = allAirlines.find((a) => a.code === selectedAirline);
-      const departureAirportInfo = allAirportsFlat.find(
+      
+      const departureAirportInfo = allAirports.find(
         (a) => a.code === departureAirport,
       );
-      const destinationAirportInfo = allAirportsFlat.find(
+      const destinationAirportInfo = allAirports.find(
         (a) => a.code === destinationAirport,
       );
 
@@ -203,15 +196,13 @@ const SelectFlightPage = () => {
       const enhancedFlightData: EnhancedFlightDetails = {
         ...calculatedData,
         departureAirport,
-        departureAirportName: departureAirportInfo.name,
+        departureAirportName: departureAirportInfo.name, 
         arrivalAirport: destinationAirport,
         arrivalAirportName: destinationAirportInfo.name,
         departureTime: departureTimeInput,
         flightNumber: `${selectedAirline.toUpperCase()}${flightNumberDigits}`,
-        airline: { id: 0, ...airlineInfo }, // Mock ID
+        airline: airlineInfo,
         cabin: formState.selectedCabin,
-
-        // THIS IS THE FIX: Add the missing property from the form state.
         departureDate: formState.departureDate,
       };
       setFlightData(enhancedFlightData);
@@ -237,12 +228,9 @@ const SelectFlightPage = () => {
     });
 
     const mockFlight: MockFlight = {
-      id: 1,
       flightNumber: flightData.flightNumber,
       airline: {
-        id: 0,
-        code: flightData.airline.code,
-        name: flightData.airline.name,
+        ...flightData.airline,
         logo: flightData.airline.logo || "",
         region: flightData.airline.region || "",
       },
@@ -250,23 +238,23 @@ const SelectFlightPage = () => {
         airport: {
           code: flightData.departureAirport,
           name: flightData.departureAirportName,
-          city: flightData.departureAirportName.split(",")[0],
-          country: "N/A",
+          city: allAirports.find(a => a.code === flightData.departureAirport)?.city || "",
+          country: allAirports.find(a => a.code === flightData.departureAirport)?.country || "N/A",
         },
-        time: flightData.departureTime,
-        date: flightData.departureDate,
+        time: flightData.departureTimeLocal,
+        date: flightData.departureDateLocal,
       },
       arrival: {
         airport: {
           code: flightData.arrivalAirport,
           name: flightData.arrivalAirportName,
-          city: flightData.arrivalAirportName.split(",")[0],
-          country: "N/A",
+          city: allAirports.find(a => a.code === flightData.arrivalAirport)?.city || "",
+          country: allAirports.find(a => a.code === flightData.arrivalAirport)?.country || "N/A",
         },
-        time: flightData.arrivalTime,
-        date: flightData.arrivalDate,
+        time: flightData.arrivalTimeLocal,
+        date: flightData.arrivalDateLocal,
       },
-      duration: flightData.duration,
+      duration: flightData.durationFormatted,
       class: flightData.cabin,
     };
     setSelectedFlight(mockFlight);
@@ -275,8 +263,8 @@ const SelectFlightPage = () => {
 
   const departureDateAsDate = new Date(formState.departureDate + "T00:00:00");
 
-  // --- Render ---
   return (
+    // ... JSX is unchanged, no need to include it all again ...
     <div className="container mx-auto px-4 py-6 md:py-8">
       <ProgressStepper currentStep={1} />
       <div className="max-w-4xl mx-auto">
@@ -291,9 +279,9 @@ const SelectFlightPage = () => {
               <div className="space-y-4">
                 <FormElement label="Departure Airport">
                   <AirportCombobox
-                    airports={allAirportsFlat}
+                    airports={allAirports}
                     value={formState.departureAirport}
-                    onChange={(value) =>
+                    onChange={(value: string) =>
                       handleFormChange("departureAirport", value)
                     }
                     placeholder="Select departure..."
@@ -333,7 +321,7 @@ const SelectFlightPage = () => {
                 <FormElement label="Airline">
                   <Select
                     value={formState.selectedAirline}
-                    onValueChange={(v) =>
+                    onValueChange={(v: string) =>
                       handleFormChange("selectedAirline", v)
                     }
                   >
@@ -355,9 +343,9 @@ const SelectFlightPage = () => {
               <div className="space-y-4">
                 <FormElement label="Destination Airport">
                   <AirportCombobox
-                    airports={allAirportsFlat}
+                    airports={allAirports}
                     value={formState.destinationAirport}
-                    onChange={(value) =>
+                    onChange={(value: string) =>
                       handleFormChange("destinationAirport", value)
                     }
                     placeholder="Select destination..."
@@ -367,7 +355,7 @@ const SelectFlightPage = () => {
                   <div className="flex space-x-2">
                     <Select
                       value={formState.departureHour}
-                      onValueChange={(v) =>
+                      onValueChange={(v: string) =>
                         handleFormChange("departureHour", v)
                       }
                     >
@@ -384,7 +372,7 @@ const SelectFlightPage = () => {
                     </Select>
                     <Select
                       value={formState.departureMinute}
-                      onValueChange={(v) =>
+                      onValueChange={(v: string) =>
                         handleFormChange("departureMinute", v)
                       }
                     >
@@ -428,7 +416,9 @@ const SelectFlightPage = () => {
                 <FormElement label="Cabin Class">
                   <Select
                     value={formState.selectedCabin}
-                    onValueChange={(v) => handleFormChange("selectedCabin", v)}
+                    onValueChange={(v: string) =>
+                      handleFormChange("selectedCabin", v)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select cabin" />
@@ -533,8 +523,8 @@ const SelectFlightPage = () => {
               </div>
               <div className="mt-6 flex justify-end">
                 <Button onClick={handleContinue}>
-                  <ArrowRight className="mr-2 h-4 w-4" /> Continue to Passenger
-                  Details
+                  Continue to Passenger Details{" "}
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
             </CardContent>

@@ -2,7 +2,6 @@
 
 import { z } from "zod";
 
-// ====== FORM & CONTEXT TYPES ======
 export type FlightSearchData = {
   departureAirport: string;
   arrivalAirport: string;
@@ -23,17 +22,9 @@ export const passengerDetailsSchema = z.object({
 
 export type PassengerDetailsForm = z.infer<typeof passengerDetailsSchema>;
 
-// ====== MOCK FLIGHT DATA STRUCTURES ======
 export type MockFlight = {
-  id: number;
   flightNumber: string;
-  airline: {
-    id: number;
-    code: string;
-    name: string;
-    logo?: string;
-    region?: string;
-  };
+  airline: Airline;
   departure: {
     airport: { code: string; name: string; city: string; country: string };
     time: string;
@@ -57,11 +48,8 @@ export type GeneratedTicket = {
   boardingTime: string;
 };
 
-// ====== UTILITY TYPES ======
-
-// THIS IS THE FIX: The updated interface now includes all calculated properties.
 export interface EnhancedFlightDetails {
-  // Input properties
+
   departureAirport: string;
   departureAirportName: string;
   arrivalAirport: string;
@@ -70,7 +58,6 @@ export interface EnhancedFlightDetails {
   flightNumber: string;
   cabin: string;
 
-  // Calculated properties that were missing from the old type
   durationFormatted: string;
   departureTimeLocal: string;
   arrivalTimeLocal: string;
@@ -83,16 +70,25 @@ export interface EnhancedFlightDetails {
   timezoneDifference: string;
   dayChange: number;
   exitDay: string;
-
-  // This one is needed from the original `flightData` object but wasn't in the calculator return type
   departureDate: string;
 
-  // Airline info is also part of the final object
-  airline: {
-    id: number;
-    code: string;
-    name: string;
-    logo?: string;
-    region?: string;
-  };
+  airline: Airline;
+}
+
+export interface Airport {
+  code: string;
+  name: string;
+  city: string;
+  country: string;
+  lat: number;
+  lon: number;
+  timezone: string;
+  region: string;
+}
+
+export interface Airline {
+  code: string;
+  name: string;
+  logo?: string;
+  region?: string;
 }

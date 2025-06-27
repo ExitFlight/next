@@ -4,7 +4,7 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation"; // Correct Next.js router
+import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, RefreshCcw } from "lucide-react";
 
 // Component Imports
@@ -35,23 +35,20 @@ import {
   type PassengerDetailsForm,
 } from "@/src/types/schema";
 
+// --- NEW DATA IMPORT ---
+import nationalitiesData from "@/src/data/nationalities.json";
+import titlesData from "@/src/data/titles.json";
+
 // --- Constants ---
 const LOCAL_STORAGE_KEY = "exitFlightPassengerDetails";
-const titles = [
-  { value: "Mr", label: "Mr." },
-  { value: "Mrs", label: "Mrs." },
-  { value: "Ms", label: "Ms." },
-  { value: "Miss", label: "Miss" },
-  { value: "Dr", label: "Dr." },
-  { value: "Prof", label: "Prof." },
-];
-const nationalities = [
-  { value: "us", label: "United States" },
-  { value: "ca", label: "Canada" },
-  { value: "uk", label: "United Kingdom" },
-  { value: "au", label: "Australia" },
-  // Add other common nationalities here or use the full list if you prefer
-].sort((a, b) => a.label.localeCompare(b.label));
+
+const nationalities = [...nationalitiesData].sort((a, b) => 
+  a.label.localeCompare(b.label)
+);
+const titles = [...titlesData].sort((a, b) => 
+  a.label.localeCompare(b.label)
+);
+
 const emptyFormDefaults: PassengerDetailsForm = {
   title: "",
   firstName: "",
@@ -93,16 +90,12 @@ const PassengerDetailsPage = () => {
 
   const form = useForm<PassengerDetailsForm>({
     resolver: zodResolver(passengerDetailsSchema),
-    // Simplified default value logic: Use context first, then storage, then empty.
     defaultValues:
       contextPassengerDetails || loadFromStorage() || emptyFormDefaults,
   });
 
-  // Effect to guard the page and set the title
   useEffect(() => {
     document.title = "Passenger Details - ExitFlight";
-
-    // Guard Clause: If a user lands here without selecting a flight, send them back.
     if (!selectedFlight) {
       console.log("No flight selected in context, redirecting.");
       router.replace("/select-flight");
@@ -110,17 +103,15 @@ const PassengerDetailsPage = () => {
   }, [selectedFlight, router]);
 
   const onSubmit = (data: PassengerDetailsForm) => {
-    setPassengerDetails(data); // Update the context
-    saveToStorage(data); // Persist for next time
-    // Navigate to the next step. Let's combine the preview/generate/confirmation flow later.
-    // For now, let's assume a single final page.
+    setPassengerDetails(data);
+    saveToStorage(data);
     router.push("/ticket-preview");
   };
 
   const handleReset = () => {
     form.reset(emptyFormDefaults);
     localStorage.removeItem(LOCAL_STORAGE_KEY);
-    setPassengerDetails(null); // Clear from context as well
+    setPassengerDetails(null);
   };
 
   return (

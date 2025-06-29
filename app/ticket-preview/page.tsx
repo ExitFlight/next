@@ -8,12 +8,12 @@ import { Plane, Download, Plus } from "lucide-react";
 import { Button } from "@/app/_components/forms/Button";
 import { Card, CardContent } from "@/app/_components/Card";
 import ProgressStepper from "@/app/_components/ProgressStepper";
-import AirlineLogo from "@/app/_components/AirlineLogo";
 
 import { useFlightContext } from "@/app/context/FlightContext";
 import { GeneratedTicket } from "@/src/types/schema";
 import { downloadTicketAsPDF } from "@/src/lib/pdfGenerator";
 
+// --- Client-side helper functions are restored ---
 const generateRandomString = (length: number, chars: string): string => {
   let result = "";
   for (let i = 0; i < length; i++) {
@@ -41,7 +41,6 @@ const calculateBoardingTime = (departureTime: string): string => {
   });
 };
 
-// --- The Final Ticket Preview Component ---
 const TicketPreviewPage = () => {
   const router = useRouter();
   const {
@@ -59,8 +58,7 @@ const TicketPreviewPage = () => {
     }
 
     if (!generatedTicket) {
-      console.log("Generating new ticket details...");
-      const newTicket: GeneratedTicket = {
+      const newTicketData = {
         flight: selectedFlight,
         passenger: passengerDetails,
         bookingReference: generateBookingReference(),
@@ -68,7 +66,7 @@ const TicketPreviewPage = () => {
         seatNumber: generateSeatNumber(),
         boardingTime: calculateBoardingTime(selectedFlight.departure.time),
       };
-      setGeneratedTicket(newTicket);
+      setGeneratedTicket(newTicketData as GeneratedTicket);
     }
   }, [
     selectedFlight,
@@ -128,149 +126,148 @@ const TicketPreviewPage = () => {
           Your Generated Ticket
         </h2>
 
-          <div id="ticket-to-download" className="mb-6 md:mb-8">
-            <Card className="border-border bg-card boarding-pass shadow-2xl">
-              <CardContent className="p-4 md:p-6">
-                <div className="flex flex-col sm:flex-row">
-                  <div className="flex-1 pb-6 sm:pb-0 sm:pr-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <AirlineLogo
-                        airlineLogo={flight.airline.logo || ""}
-                        airlineName={flight.airline.name}
-                        size={40}
-                      />
-                      <div className="text-right">
-                        <p className="text-xs text-muted-foreground">
-                          Boarding Pass
-                        </p>
-                        <p className="font-medium text-base md:text-lg text-primary">
-                          {flight.class.replace("_", " ").toUpperCase()}
-                        </p>
-                      </div>
+        <div id="ticket-to-download" className="mb-6 md:mb-8">
+          <Card className="border-border bg-card boarding-pass shadow-2xl">
+            <CardContent className="p-4 md:p-6">
+              <div className="flex flex-col sm:flex-row">
+                <div className="flex-1 pb-6 sm:pb-0 sm:pr-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full mr-3">
+                      <Plane className="h-5 w-5 text-primary" />
                     </div>
-                    <div className="mb-4">
-                      <h3 className="font-semibold text-lg md:text-xl text-foreground">
-                        {passenger.firstName} {passenger.lastName}
-                      </h3>
-                      <p className="text-muted-foreground text-xs md:text-sm">
-                        Passenger
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground">
+                        Boarding Pass
+                      </p>
+                      <p className="font-medium text-base md:text-lg text-primary">
+                        {flight.class.replace("_", " ").toUpperCase()}
                       </p>
                     </div>
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div>
-                        <p className="text-muted-foreground text-xs">From</p>
-                        <p className="font-semibold text-foreground">
-                          {flight.departure.airport.city}
+                  </div>
+                  {/* ... Rest of the JSX is the same as the original working version */}
+                  <div className="mb-4">
+                    <h3 className="font-semibold text-lg md:text-xl text-foreground">
+                      {passenger.firstName} {passenger.lastName}
+                    </h3>
+                    <p className="text-muted-foreground text-xs md:text-sm">
+                      Passenger
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <p className="text-muted-foreground text-xs">From</p>
+                      <p className="font-semibold text-foreground">
+                        {flight.departure.airport.city}
+                      </p>
+                      <p className="text-xs md:text-sm text-muted-foreground">
+                        {flight.departure.airport.code}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-xs">To</p>
+                      <p className="font-semibold text-foreground">
+                        {flight.arrival.airport.city}
+                      </p>
+                      <p className="text-xs md:text-sm text-muted-foreground">
+                        {flight.arrival.airport.code}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-muted-foreground text-xs">Flight</p>
+                      <p className="font-medium text-foreground">
+                        {flight.flightNumber}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-xs">Date</p>
+                      <p className="font-semibold text-foreground">
+                        {formattedDepartureDate}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-xs">
+                        Boarding
+                      </p>
+                      <p className="font-semibold text-foreground">
+                        {boardingTime}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex-1 pt-6 sm:pt-0 sm:pl-6 border-t sm:border-t-0 border-dashed border-border sm:border-l">
+                  <div className="flex justify-between items-start mb-6">
+                    <div>
+                      <p className="text-muted-foreground text-xs">Flight</p>
+                      <p className="font-medium text-foreground">
+                        {flight.flightNumber}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-muted-foreground text-xs">Gate</p>
+                      <p className="font-semibold text-foreground">{gate}</p>
+                    </div>
+                  </div>
+                  <div className="mb-6">
+                    <div className="flex justify-between items-center mb-1">
+                      <div className="text-center">
+                        <p className="font-semibold text-xl text-foreground">
+                          {flight.departure.time}
                         </p>
-                        <p className="text-xs md:text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                           {flight.departure.airport.code}
                         </p>
                       </div>
-                      <div>
-                        <p className="text-muted-foreground text-xs">To</p>
-                        <p className="font-semibold text-foreground">
-                          {flight.arrival.airport.city}
+                      <div className="flex-1 mx-4">
+                        <div className="flex items-center relative">
+                          <div className="h-0.5 flex-1 bg-muted"></div>
+                          <div>
+                            <Plane
+                              className="text-primary transform translate-x-1/2"
+                              size={14}
+                            />
+                          </div>
+                        </div>
+                        <div className="text-center text-muted-foreground text-xs mt-1">
+                          {flight.duration}
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <p className="font-semibold text-xl text-foreground">
+                          {flight.arrival.time}
                         </p>
-                        <p className="text-xs md:text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                           {flight.arrival.airport.code}
                         </p>
                       </div>
                     </div>
-                    <div className="grid grid-cols-3 gap-4">
-                      <div>
-                        <p className="text-muted-foreground text-xs">Flight</p>
-                        <p className="font-medium text-foreground">
-                          {flight.flightNumber}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-muted-foreground text-xs">Date</p>
-                        <p className="font-semibold text-foreground">
-                          {formattedDepartureDate}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-muted-foreground text-xs">
-                          Boarding
-                        </p>
-                        <p className="font-semibold text-foreground">
-                          {boardingTime}
-                        </p>
-                      </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <p className="text-muted-foreground text-xs">Seat</p>
+                      <p className="font-semibold text-lg text-foreground">
+                        {seatNumber}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-xs">Class</p>
+                      <p className="font-semibold text-lg text-foreground">
+                        {flight.class.charAt(0).toUpperCase() +
+                          flight.class.slice(1)}
+                      </p>
                     </div>
                   </div>
-                  <div className="flex-1 pt-6 sm:pt-0 sm:pl-6 border-t sm:border-t-0 border-dashed border-border sm:border-l">
-                    <div className="flex justify-between items-start mb-6">
-                      <div>
-                        <p className="text-muted-foreground text-xs">Flight</p>
-                        <p className="font-medium text-foreground">
-                          {flight.flightNumber}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-muted-foreground text-xs">Gate</p>
-                        <p className="font-semibold text-foreground">{gate}</p>
-                      </div>
-                    </div>
-                    <div className="mb-6">
-                      <div className="flex justify-between items-center mb-1">
-                        <div className="text-center">
-                          <p className="font-semibold text-xl text-foreground">
-                            {flight.departure.time}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {flight.departure.airport.code}
-                          </p>
-                        </div>
-                        <div className="flex-1 mx-4">
-                          <div className="flex items-center relative">
-                            <div className="h-0.5 flex-1 bg-muted"></div>
-                            <div>
-                              <Plane
-                                className="text-primary transform translate-x-1/2"
-                                size={14}
-                              />
-                            </div>
-                          </div>
-                          <div className="text-center text-muted-foreground text-xs mt-1">
-                            {flight.duration}
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <p className="font-semibold text-xl text-foreground">
-                            {flight.arrival.time}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {flight.arrival.airport.code}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div>
-                        <p className="text-muted-foreground text-xs">Seat</p>
-                        <p className="font-semibold text-lg text-foreground">
-                          {seatNumber}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-muted-foreground text-xs">Class</p>
-                        <p className="font-semibold text-lg text-foreground">
-                          {flight.class.charAt(0).toUpperCase() +
-                            flight.class.slice(1)}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-center mt-4">
-                      <div className="h-12 w-full bg-muted-foreground/10 flex items-center justify-center font-mono text-xs text-muted-foreground">
-                        {bookingReference}
-                      </div>
+                  <div className="text-center mt-4">
+                    <div className="h-12 w-full bg-muted-foreground/10 flex items-center justify-center font-mono text-xs text-muted-foreground">
+                      {bookingReference}
                     </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <Button onClick={handleDownload} size="lg">

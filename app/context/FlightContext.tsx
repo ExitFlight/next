@@ -6,6 +6,8 @@ import {
   MockFlight,
   FlightSearchData,
   PassengerDetailsForm,
+  FLIGHT_STORAGE_KEY,
+  PASSENGER_STORAGE_KEY,
 } from "@/src/types/schema";
 
 interface FlightContextType {
@@ -37,8 +39,8 @@ export const FlightProvider = ({ children }: { children: ReactNode }) => {
     setPassengerDetails(null);
     setGeneratedTicket(null);
     if (typeof window !== "undefined") {
-      localStorage.removeItem("exitFlightFormState");
-      localStorage.removeItem("exitFlightPassengerDetails");
+      localStorage.removeItem(FLIGHT_STORAGE_KEY);
+      localStorage.removeItem(PASSENGER_STORAGE_KEY);
     }
   };
 

@@ -1,0 +1,14 @@
+{
+  "airlineCode": "BA",
+  "airlineName": "British Airways",
+  "logoUrl": "/logos/ba.svg",
+  "branding": {
+    "primaryColor": "#0C204E",
+    "secondaryColor": "#D91F3A",
+    "textColorOnPrimary": "#FFFFFF",
+    "textColorOnBackground": "#0C204E"
+  },
+  "data": {
+    "frequentFlyerProgramName": "Executive Club"
+  }
+}

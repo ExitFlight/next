@@ -1,0 +1,13 @@
+{
+  "airlineCode": "AA",
+  "airlineName": "American Airlines",
+  "logoUrl": "/logos/aa.svg",
+  "branding": {
+    "primaryColor": "#0078D2",
+    "secondaryColor": "#E40000",
+    "textColor": "#FFFFFF"
+  },
+  "data": {
+    "frequentFlyerProgramName": "AAdvantage"
+  }
+}

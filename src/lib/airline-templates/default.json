@@ -1,0 +1,14 @@
+{
+  "airlineCode": "default",
+  "airlineName": "ExitFlight Generic",
+  "logoUrl": "/logos/default.svg",
+  "branding": {
+    "primaryColor": "#2094f3",
+    "secondaryColor": "#807e7e",
+    "textColorOnPrimary": "#FFFFFF",
+    "textColorOnBackground": "#FAFAFA"
+  },
+  "data": {
+    "frequentFlyerProgramName": "Frequent Flyer"
+  }
+}

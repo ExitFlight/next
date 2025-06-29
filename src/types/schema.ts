@@ -22,22 +22,58 @@ export const passengerDetailsSchema = z.object({
 
 export type PassengerDetailsForm = z.infer<typeof passengerDetailsSchema>;
 
-export type MockFlight = {
-  flightNumber: string;
-  airline: Airline;
-  departure: {
-    airport: { code: string; name: string; city: string; country: string };
-    time: string;
-    date: string;
-  };
-  arrival: {
-    airport: { code: string; name: string; city: string; country: string };
-    time: string;
-    date: string;
-  };
-  duration: string;
-  class: string;
-};
+const airlineSchema = z.object({
+  code: z.string(),
+  name: z.string(),
+});
+
+export type Airline = z.infer<typeof airlineSchema>;
+
+export const mockFlightSchema = z.object({
+  flightNumber: z.string(),
+  airline: airlineSchema,
+  departure: z.object({
+    airport: z.object({
+      code: z.string(),
+      name: z.string(),
+      city: z.string(),
+      country: z.string(),
+    }),
+    time: z.string(),
+    date: z.string(),
+  }),
+  arrival: z.object({
+    airport: z.object({
+      code: z.string(),
+      name: z.string(),
+      city: z.string(),
+      country: z.string(),
+    }),
+    time: z.string(),
+    date: z.string(),
+  }),
+  duration: z.string(),
+  class: z.string(),
+});
+
+export type MockFlight = z.infer<typeof mockFlightSchema>;
+
+export const airlineTemplateSchema = z.object({
+  airlineCode: z.string(),
+  airlineName: z.string(),
+  logoUrl: z.string(),
+  branding: z.object({
+    primaryColor: z.string(),
+    secondaryColor: z.string(),
+    textColorOnPrimary: z.string(),
+    textColorOnBackground: z.string(),
+  }),
+  data: z.object({
+    frequentFlyerProgramName: z.string(),
+  }),
+});
+
+export type AirlineTemplate = z.infer<typeof airlineTemplateSchema>;
 
 export type GeneratedTicket = {
   flight: MockFlight;
@@ -46,6 +82,7 @@ export type GeneratedTicket = {
   bookingReference: string;
   gate: string;
   boardingTime: string;
+  template: AirlineTemplate;
 };
 
 export interface EnhancedFlightDetails {
@@ -85,9 +122,6 @@ export interface Airport {
   region: string;
 }
 
-export interface Airline {
-  code: string;
-  name: string;
-  logo?: string;
-  region?: string;
-}
+export const FLIGHT_STORAGE_KEY = "exitFlightFormState";
+
+export const PASSENGER_STORAGE_KEY = "exitFlightPassengerDetails";

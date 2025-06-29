@@ -36,13 +36,13 @@ import { Badge } from "@/app/_components/Badge";
 import ProgressStepper from "@/app/_components/ProgressStepper";
 import { AirportCombobox } from "@/app/_components/forms/AirportCombobox";
 import { AirlineCombobox } from "@/app/_components/forms/AirlineCombobox";
-import { Alert, AlertDescription, AlertTitle } from "@/app/_components/Alert"; // <-- Import Alert components
+import { Alert, AlertDescription, AlertTitle } from "@/app/_components/Alert";
 
 // Context and Utils
 import { useFlightContext } from "@/app/context/FlightContext";
 import { calculateEnhancedFlightDetails } from "@/src/lib/enhancedFlightCalculator";
 import { allAirlines } from "@/src/lib/airlineUtil";
-import { MockFlight, EnhancedFlightDetails } from "@/src/types/schema";
+import { MockFlight, EnhancedFlightDetails, FLIGHT_STORAGE_KEY } from "@/src/types/schema";
 import { formatDistance } from "@/src/lib/helper";
 import allAirports from "@/src/data/airports.json";
 
@@ -58,7 +58,6 @@ const cabinClasses = [
   { value: "business", label: "Business" },
   { value: "first", label: "First Class" },
 ];
-const LOCAL_STORAGE_KEY = "exitFlightFormState";
 
 interface FlightFormState {
   departureAirport: string;
@@ -97,7 +96,7 @@ const SelectFlightPage = () => {
   useEffect(() => {
     document.title = "Select Flight - ExitFlight";
     try {
-      const savedState = localStorage.getItem(LOCAL_STORAGE_KEY);
+      const savedState = localStorage.getItem(FLIGHT_STORAGE_KEY);
       if (savedState) setFormState(JSON.parse(savedState));
     } catch (e) {
       console.error("Failed to load state from localStorage", e);
@@ -105,7 +104,7 @@ const SelectFlightPage = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(formState));
+    localStorage.setItem(FLIGHT_STORAGE_KEY, JSON.stringify(formState));
   }, [formState]);
 
   useEffect(() => {
@@ -129,7 +128,7 @@ const SelectFlightPage = () => {
   };
 
   const handleResetAll = () => {
-    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    localStorage.removeItem(FLIGHT_STORAGE_KEY);
     setFormState({
       departureAirport: "",
       destinationAirport: "",
@@ -152,9 +151,8 @@ const SelectFlightPage = () => {
       flightNumberDigits,
     } = formState;
 
-    setError(""); // Reset error on every attempt
+    setError("");
 
-    // --- vvv THIS IS THE CHANGE vvv ---
     if (
       !departureAirport ||
       !destinationAirport ||
@@ -164,13 +162,12 @@ const SelectFlightPage = () => {
       setError(
         "Please fill all required fields: Airports, Airline, and a valid Flight Number (1-5 digits).",
       );
-      return; // Stop execution
+      return;
     }
     if (departureAirport === destinationAirport) {
       setError("Departure and destination airports cannot be the same.");
-      return; // Stop execution
+      return;
     }
-    // --- ^^^ THIS IS THE CHANGE ^^^ ---
 
     setIsLoading(true);
     setFlightData(null);
@@ -235,13 +232,15 @@ const SelectFlightPage = () => {
       departureTime: flightData.departureTime,
       calculatedFlightData: flightData,
     });
+
+    const cleanAirline = {
+      code: flightData.airline.code,
+      name: flightData.airline.name,
+    };
+
     const mockFlight: MockFlight = {
       flightNumber: flightData.flightNumber,
-      airline: {
-        ...flightData.airline,
-        logo: flightData.airline.logo || "",
-        region: flightData.airline.region || "",
-      },
+      airline: cleanAirline,
       departure: {
         airport: {
           code: flightData.departureAirport,
@@ -273,6 +272,7 @@ const SelectFlightPage = () => {
       duration: flightData.durationFormatted,
       class: flightData.cabin,
     };
+
     setSelectedFlight(mockFlight);
     router.push("/passenger-details");
   };
@@ -453,7 +453,6 @@ const SelectFlightPage = () => {
                 {isLoading ? "Generating Preview..." : "Preview Ticket"}
               </Button>
             </div>
-            {/* --- vvv THIS IS THE CHANGE vvv --- */}
             {error && (
               <div className="mt-6">
                 <Alert variant="destructive">
@@ -463,7 +462,6 @@ const SelectFlightPage = () => {
                 </Alert>
               </div>
             )}
-            {/* --- ^^^ THIS IS THE CHANGE ^^^ --- */}
           </CardContent>
         </Card>
 
@@ -472,18 +470,9 @@ const SelectFlightPage = () => {
             <CardContent className="p-4 md:p-6">
               <div className="mb-4 flex justify-between items-center">
                 <div className="flex items-center">
-                  {flightData.airline.logo && (
-                    <img
-                      src={flightData.airline.logo}
-                      alt={`${flightData.airline.name} logo`}
-                      className="w-10 h-10 rounded-full mr-3 object-contain"
-                    />
-                  )}
-                  {!flightData.airline.logo && (
-                    <div className="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full mr-3">
-                      <Plane className="h-5 w-5 text-primary" />
-                    </div>
-                  )}
+                  <div className="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-full mr-3">
+                    <Plane className="h-5 w-5 text-primary" />
+                  </div>
                   <div>
                     <h3 className="text-lg font-bold">
                       {flightData.flightNumber}

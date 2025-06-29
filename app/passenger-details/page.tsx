@@ -32,6 +32,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/app/_components/Alert";
 // Context and Schema
 import { useFlightContext } from "@/app/context/FlightContext";
 import {
+  PASSENGER_STORAGE_KEY,
   passengerDetailsSchema,
   type PassengerDetailsForm,
 } from "@/src/types/schema";
@@ -40,8 +41,6 @@ import {
 import nationalitiesData from "@/src/data/nationalities.json";
 import titlesData from "@/src/data/titles.json";
 
-// Constants
-const LOCAL_STORAGE_KEY = "exitFlightPassengerDetails";
 
 const nationalities = [...nationalitiesData].sort((a, b) =>
   a.label.localeCompare(b.label),
@@ -61,7 +60,7 @@ const emptyFormDefaults: PassengerDetailsForm = {
 // Helper Functions
 const saveToStorage = (details: PassengerDetailsForm) => {
   try {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(details));
+    localStorage.setItem(PASSENGER_STORAGE_KEY, JSON.stringify(details));
   } catch (error) {
     console.error("Error saving passenger details to localStorage:", error);
   }
@@ -70,7 +69,7 @@ const saveToStorage = (details: PassengerDetailsForm) => {
 const loadFromStorage = (): PassengerDetailsForm | null => {
   if (typeof window === "undefined") return null;
   try {
-    const savedDetails = localStorage.getItem(LOCAL_STORAGE_KEY);
+    const savedDetails = localStorage.getItem(PASSENGER_STORAGE_KEY);
     return savedDetails ? JSON.parse(savedDetails) : null;
   } catch (error) {
     console.error("Error loading passenger details from localStorage:", error);
@@ -122,7 +121,7 @@ const PassengerDetailsPage = () => {
 
   const handleReset = () => {
     form.reset(emptyFormDefaults);
-    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    localStorage.removeItem(PASSENGER_STORAGE_KEY);
     setPassengerDetails(null);
     setFormError(null); // Also clear the alert on reset
   };

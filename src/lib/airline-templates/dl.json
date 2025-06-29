@@ -1,0 +1,14 @@
+{
+  "airlineCode": "DL",
+  "airlineName": "Delta Air Lines",
+  "logoUrl": "/logos/dl.svg",
+  "branding": {
+    "primaryColor": "#E31937",
+    "secondaryColor": "#003366",
+    "textColorOnPrimary": "#FFFFFF",
+    "textColorOnBackground": "#003366"
+  },
+  "data": {
+    "frequentFlyerProgramName": "SkyMiles"
+  }
+}

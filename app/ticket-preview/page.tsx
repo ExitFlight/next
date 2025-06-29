@@ -6,15 +6,15 @@ import { useRouter } from "next/navigation";
 import { Plane, Download, Plus, ArrowLeft } from "lucide-react";
 
 import { Button } from "@/app/_components/forms/Button";
-import { Card, CardContent } from "@/app/_components/Card";
 import ProgressStepper from "@/app/_components/ProgressStepper";
 
 import { useFlightContext } from "@/app/context/FlightContext";
 import { GeneratedTicket } from "@/src/types/schema";
 import { downloadTicketAsPDF } from "@/src/lib/pdfGenerator";
-import { BoardingPass } from "../_components/BoardingPass";
+import { getAirlineTemplate } from "@/src/lib/airlineTemplate"; // Import the new loader
+import { BoardingPass } from "../_components/BoardingPass"; // Import the BoardingPass component
 
-// --- Client-side helper functions are restored ---
+// Helper functions
 const generateRandomString = (length: number, chars: string): string => {
   let result = "";
   for (let i = 0; i < length; i++) {
@@ -53,22 +53,32 @@ const TicketPreviewPage = () => {
   } = useFlightContext();
 
   useEffect(() => {
-    if (!selectedFlight || !passengerDetails) {
-      router.replace("/");
-      return;
-    }
+    // Define an async function inside the effect to handle template loading
+    const generateTicket = async () => {
+      if (!selectedFlight || !passengerDetails) {
+        router.replace("/");
+        return;
+      }
 
-    if (!generatedTicket) {
-      const newTicketData = {
-        flight: selectedFlight,
-        passenger: passengerDetails,
-        bookingReference: generateBookingReference(),
-        gate: generateGate(),
-        seatNumber: generateSeatNumber(),
-        boardingTime: calculateBoardingTime(selectedFlight.departure.time),
-      };
-      setGeneratedTicket(newTicketData as GeneratedTicket);
-    }
+      // Only generate if the ticket doesn't already exist in the context
+      if (!generatedTicket) {
+        // Fetch the dynamic airline template
+        const template = await getAirlineTemplate(selectedFlight.airline.code);
+
+        const newTicketData: GeneratedTicket = {
+          flight: selectedFlight,
+          passenger: passengerDetails,
+          bookingReference: generateBookingReference(),
+          gate: generateGate(),
+          seatNumber: generateSeatNumber(),
+          boardingTime: calculateBoardingTime(selectedFlight.departure.time),
+          template: template,
+        };
+        setGeneratedTicket(newTicketData);
+      }
+    };
+
+    generateTicket();
   }, [
     selectedFlight,
     passengerDetails,
@@ -102,8 +112,6 @@ const TicketPreviewPage = () => {
     );
   }
 
-  console.log("generatedTicket:", generatedTicket);
-
   return (
     <div className="container mx-auto px-4 py-6 md:py-8">
       <ProgressStepper currentStep={3} />
@@ -113,7 +121,7 @@ const TicketPreviewPage = () => {
         </h2>
 
         <div id="ticket-to-download" className="mb-6 md:mb-8">
-          {/* <BoardingPass ticket={generatedTicket} /> */}
+          <BoardingPass ticket={generatedTicket} />
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">

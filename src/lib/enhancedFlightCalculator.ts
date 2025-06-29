@@ -1,23 +1,16 @@
-import { format, addMinutes, differenceInDays, parse } from "date-fns";
+import { addMinutes, differenceInDays, parse } from "date-fns";
 import {
   toZonedTime,
   formatInTimeZone,
   getTimezoneOffset as getIANATimezoneOffset,
 } from "date-fns-tz";
 
-// --- NEW DATA IMPORTS ---
 import airports from "@/src/data/airports.json";
-import type { Airport } from "@/src/types/schema"; // Using the shared type
+import type { Airport } from "@/src/types/schema";
 
-// --- NEW: Create a Map for fast O(1) lookups ---
-// This is much more performant than using array.find() repeatedly.
 const airportDataMap: Map<string, Airport> = new Map(
   airports.map((airport) => [airport.code, airport as Airport]),
 );
-
-// --- DELETE THESE CONSTANTS ---
-// const airportCoordinates: { ... } = { ... };
-// const airportTimezones: { ... } = { ... };
 
 function getDistanceFromLatLonInKm(
   lat1: number,
@@ -55,7 +48,6 @@ export async function calculateRealisticFlightTimes(
   arrivalLocal: Date;
   distanceKm: number;
 }> {
-  // --- UPDATED: Use the Map to get all airport data at once ---
   const originData = airportDataMap.get(originCode);
   const destData = airportDataMap.get(destCode);
 
@@ -76,11 +68,9 @@ export async function calculateRealisticFlightTimes(
   const bufferMinutes = 36 + baseFlightTimeHours * 60 * 0.08;
   const durationMinutes = Math.round(baseFlightTimeHours * 60 + bufferMinutes);
 
-  // --- UPDATED: Get timezones from our consolidated data source ---
   const originTimezone = originData.timezone || "UTC";
   const destTimezone = destData.timezone || "UTC";
 
-  // The rest of this complex time calculation logic remains the same
   const departureDateToUse =
     departureDateStrInput || new Date().toISOString().split("T")[0];
 
@@ -259,7 +249,6 @@ export async function calculateEnhancedFlightDetails(
     departureTimeStr,
   );
 
-  // --- UPDATED: Get timezones from our consolidated data source via the Map ---
   const originTimezone = airportDataMap.get(originCode)?.timezone || "UTC";
   const destTimezone = airportDataMap.get(destCode)?.timezone || "UTC";
 

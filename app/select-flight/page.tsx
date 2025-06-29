@@ -14,7 +14,6 @@ import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 
-// Component Imports
 import { Button } from "@/app/_components/forms/Button";
 import { Card, CardContent } from "@/app/_components/Card";
 import {
@@ -38,7 +37,6 @@ import { AirportCombobox } from "@/app/_components/forms/AirportCombobox";
 import { AirlineCombobox } from "@/app/_components/forms/AirlineCombobox";
 import { Alert, AlertDescription, AlertTitle } from "@/app/_components/Alert";
 
-// Context and Utils
 import { useFlightContext } from "@/app/context/FlightContext";
 import { calculateEnhancedFlightDetails } from "@/src/lib/enhancedFlightCalculator";
 import { allAirlines } from "@/src/lib/airlineUtil";

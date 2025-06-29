@@ -22,11 +22,10 @@ import {
 
 import { Airport } from "@/src/types/schema";
 
-// Define the props our component will accept
 interface AirportComboboxProps {
   airports: Airport[];
-  value: string; // The currently selected airport code (e.g., "JFK")
-  onChange: (value: string) => void; // Function to call when an airport is selected
+  value: string;
+  onChange: (value: string) => void;
   placeholder?: string;
 }
 
@@ -37,16 +36,13 @@ export function AirportCombobox({
   placeholder = "Select airport...",
 }: AirportComboboxProps) {
   const [open, setOpen] = React.useState(false);
-  // --- NEW: State to hold the search query from the input ---
+
   const [searchQuery, setSearchQuery] = React.useState("");
 
-  // Find the full airport object from the selected value code for display
   const selectedAirport = airports.find(
     (airport) => airport.code.toLowerCase() === value.toLowerCase(),
   );
 
-  // --- NEW: Custom filtering logic ---
-  // We use useMemo to avoid re-calculating on every render, only when the query or airport list changes.
   const filteredAirports = React.useMemo(() => {
     if (!searchQuery) {
       return airports;
@@ -54,15 +50,12 @@ export function AirportCombobox({
 
     const lowercasedQuery = searchQuery.toLowerCase();
 
-    // This regex looks for the query at the beginning of a word boundary (\b)
-    // It's case-insensitive ('i')
     const searchRegex = new RegExp(`\\b${lowercasedQuery}`, "i");
 
     return airports.filter((airport) => {
-      // Test 1: Does the IATA code start with the query? (e.g., "LAX")
+
       const codeMatch = airport.code.toLowerCase().startsWith(lowercasedQuery);
 
-      // Test 2: Does the name or city match the regex? (e.g., "New" for "New York", "Kennedy" for "JFK")
       const nameMatch = searchRegex.test(airport.name);
       const cityMatch = searchRegex.test(airport.city);
 
@@ -90,7 +83,7 @@ export function AirportCombobox({
           {/* --- UPDATED: CommandInput now updates our local state --- */}
           <CommandInput
             placeholder="Search by code, name, or city..."
-            onValueChange={setSearchQuery} // Updates our search query state
+            onValueChange={setSearchQuery}
           />
           <CommandList>
             <CommandEmpty>No airport found.</CommandEmpty>
@@ -99,7 +92,7 @@ export function AirportCombobox({
               {filteredAirports.map((airport) => (
                 <CommandItem
                   key={airport.code}
-                  // We no longer need the `value` prop for filtering, as we're handling it ourselves.
+
                   onSelect={() => {
                     onChange(airport.code);
                     setOpen(false);

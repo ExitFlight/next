@@ -12,15 +12,15 @@ export async function getAirlineTemplate(
 ): Promise<AirlineTemplate> {
   const code = airlineCode.toLowerCase();
   try {
-    // Attempt to import the specific airline template using its code
+
     const templateModule = await import(`@/src/lib/airline-templates/${code}.json`);
-    // The imported JSON is on the `default` property
+
     return templateModule.default as AirlineTemplate;
   } catch (error) {
     console.warn(
       `Template for airline code "${code}" not found. Falling back to default.`,
     );
-    // If the import fails (e.g., file doesn't exist), import and return the default template
+
     const defaultTemplateModule = await import(
       `@/src/lib/airline-templates/default.json`
     );

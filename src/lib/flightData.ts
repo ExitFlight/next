@@ -1,6 +1,6 @@
 // Airline logos from reliable sources
 export const airlineLogos = {
-  // Note: Keys are typically lowercase airline names. Ensure your UI lookup matches.
+
   delta:
     "https://logos-world.net/wp-content/uploads/2020/11/Delta-Air-Lines-Logo.png",
   american:
@@ -10,10 +10,9 @@ export const airlineLogos = {
   british:
     "https://1000logos.net/wp-content/uploads/2020/04/British-Airways-Logo.png",
   airasia:
-    "https://upload.wikimedia.org/wikipedia/commons/f/f5/AirAsia_New_Logo.svg", // Example AirAsia logo URL
+    "https://upload.wikimedia.org/wikipedia/commons/f/f5/AirAsia_New_Logo.svg",
 };
 
-// Flight images from Unsplash (reliable source)
 export const flightImages = [
   "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3",
   "https://images.unsplash.com/photo-1542296332-2e4473faf563?ixlib=rb-4.0.3",
@@ -21,9 +20,8 @@ export const flightImages = [
   "https://images.unsplash.com/photo-1517479149777-5f3b1511d5ad?ixlib=rb-4.0.3",
 ];
 
-// Regional hub airports that have direct international flights
 const majorHubs = [
-  // North America
+
   "JFK",
   "LAX",
   "ORD",
@@ -35,7 +33,6 @@ const majorHubs = [
   "YVR",
   "MEX",
 
-  // Europe
   "LHR",
   "CDG",
   "FRA",
@@ -50,7 +47,6 @@ const majorHubs = [
   "OSL",
   "HEL",
 
-  // Asia
   "HKG",
   "SIN",
   "NRT",
@@ -65,30 +61,26 @@ const majorHubs = [
   "SGN",
   "HAN",
 
-  // Middle East
   "DXB",
   "DOH",
   "AUH",
 
-  // Oceania
   "SYD",
   "MEL",
   "AKL",
 
-  // Africa
   "JNB",
   "CAI",
   "CMN",
   "ADD",
 ];
 
-// Special paired routes that don't follow hub rules
 const specialRoutes = [
-  // Examples of specific non-hub direct routes
-  ["SFO", "HNL"], // San Francisco to Honolulu
-  ["LAX", "DPS"], // Los Angeles to Bali
-  ["YVR", "PVG"], // Vancouver to Shanghai
-  ["SEA", "KEF"], // Seattle to Reykjavik
+
+  ["SFO", "HNL"],
+  ["LAX", "DPS"],
+  ["YVR", "PVG"],
+  ["SEA", "KEF"],
 ];
 
 /**
@@ -101,19 +93,14 @@ export function directFlightExists(
   origin: string,
   destination: string,
 ): boolean {
-  // If it's the same airport, no direct flight needed (but not valid for booking)
-  // This logic should likely be false if the intent is to prevent booking same-airport flights.
-  // However, to strictly answer "can a direct flight exist if I can go anywhere",
-  // we'll keep the spirit of allowing any distinct pair.
+
   if (origin === destination) {
-    return false; // A flight from KIX to KIX isn't a flight path.
+    return false;
   }
 
-  // If we want to allow any theoretical direct flight between any two different airports:
   return true;
 }
 
-// Function to format dates for the tickets
 export function formatDate(date: Date): string {
   return date.toLocaleDateString("en-US", {
     weekday: "long",
@@ -123,7 +110,6 @@ export function formatDate(date: Date): string {
   });
 }
 
-// Function to calculate boarding time (typically 30 mins before departure)
 export function calculateBoardingTime(departureTime: string): string {
   const [hours, minutes] = departureTime.split(":").map(Number);
 
@@ -138,7 +124,6 @@ export function calculateBoardingTime(departureTime: string): string {
   });
 }
 
-// Generate a random booking reference (6 alphanumeric characters)
 export function generateBookingReference(): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let result = "";
@@ -148,23 +133,22 @@ export function generateBookingReference(): string {
   return result;
 }
 
-// Generate a random seat number based on preference
 export function generateSeatNumber(preference?: string): string {
   const row = Math.floor(Math.random() * 30) + 1;
   let seat: string;
 
   if (preference === "window") {
-    // A or F
+
     seat = Math.random() > 0.5 ? "A" : "F";
   } else if (preference === "aisle") {
-    // C or D
+
     seat = Math.random() > 0.5 ? "C" : "D";
   } else if (preference === "middle") {
-    // B or E
+
     seat = Math.random() > 0.5 ? "B" : "E";
   } else {
-    // Any seat
-    seat = String.fromCharCode(65 + Math.floor(Math.random() * 6)); // A-F
+
+    seat = String.fromCharCode(65 + Math.floor(Math.random() * 6));
   }
 
   return `${row}${seat}`;

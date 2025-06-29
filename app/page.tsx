@@ -2,9 +2,8 @@
 import { Plane, Users, FileText } from "lucide-react";
 import { Card, CardContent } from "@/app/_components/Card";
 import Image from "next/image";
-import { CreateTicketButton } from "@/app/_components/CreateTicketButton"; // Import our new client component
+import { CreateTicketButton } from "@/app/_components/CreateTicketButton";
 
-// This is now a Server Component! No "use client" needed.
 const Home = () => {
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
@@ -67,7 +66,6 @@ const Home = () => {
   );
 };
 
-// Helper components to keep the main component clean
 const FeatureCard = ({
   icon,
   title,
@@ -95,7 +93,7 @@ const GalleryImage = ({ src, alt }: { src: string; alt: string }) => (
     width={500}
     height={300}
     className="rounded-lg w-full h-28 md:h-48 object-cover"
-    priority={false} // Only set priority=true for above-the-fold images
+    priority={false}
   />
 );
 

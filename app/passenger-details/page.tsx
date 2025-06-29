@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, RefreshCcw, AlertTriangle } from "lucide-react";
 
-// Component Imports
 import { Button } from "@/app/_components/forms/Button";
 import {
   Form,
@@ -29,7 +28,6 @@ import { Card, CardContent } from "@/app/_components/Card";
 import ProgressStepper from "@/app/_components/ProgressStepper";
 import { Alert, AlertDescription, AlertTitle } from "@/app/_components/Alert";
 
-// Context and Schema
 import { useFlightContext } from "@/app/context/FlightContext";
 import {
   PASSENGER_STORAGE_KEY,
@@ -37,7 +35,6 @@ import {
   type PassengerDetailsForm,
 } from "@/src/types/schema";
 
-// Data Imports
 import nationalitiesData from "@/src/data/nationalities.json";
 import titlesData from "@/src/data/titles.json";
 
@@ -56,7 +53,6 @@ const emptyFormDefaults: PassengerDetailsForm = {
   nationality: "",
 };
 
-// Helper Functions
 const saveToStorage = (details: PassengerDetailsForm) => {
   try {
     localStorage.setItem(PASSENGER_STORAGE_KEY, JSON.stringify(details));
@@ -76,7 +72,6 @@ const loadFromStorage = (): PassengerDetailsForm | null => {
   }
 };
 
-// --- The Component ---
 const PassengerDetailsPage = () => {
   const router = useRouter();
   const {

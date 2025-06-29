@@ -32,7 +32,7 @@ export const BoardingPass = ({ ticket }: BoardingPassProps) => {
   });
 
   return (
-    // Use CSS variables for dynamic, data-driven styling
+
     <div
       style={
         {

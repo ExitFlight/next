@@ -24,7 +24,7 @@ import { Airline } from "@/src/types/schema";
 
 interface AirlineComboboxProps {
   airlines: Airline[];
-  value: string; // The currently selected airline code (e.g., "AA")
+  value: string;
   onChange: (value: string) => void;
   placeholder?: string;
 }
@@ -36,14 +36,13 @@ export function AirlineCombobox({
   placeholder = "Select Airline...",
 }: AirlineComboboxProps) {
   const [open, setOpen] = React.useState(false);
-  // --- vvv NEW: State to hold the search query --- vvv
+
   const [searchQuery, setSearchQuery] = React.useState("");
 
   const selectedAirline = airlines.find(
     (airline) => airline.code.toLowerCase() === value.toLowerCase(),
   );
 
-  // --- vvv NEW: Custom filtering logic with useMemo for performance --- vvv
   const filteredAirlines = React.useMemo(() => {
     if (!searchQuery) {
       return airlines;
@@ -55,7 +54,6 @@ export function AirlineCombobox({
         airline.code.toLowerCase().includes(lowercasedQuery),
     );
   }, [searchQuery, airlines]);
-  // --- ^^^ END OF NEW LOGIC ^^^ ---
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -77,7 +75,7 @@ export function AirlineCombobox({
           {/* --- UPDATED: Input now controls our state --- */}
           <CommandInput
             placeholder="Search airline by name or code..."
-            onValueChange={setSearchQuery} // Update our local search query state
+            onValueChange={setSearchQuery}
           />
           <CommandList>
             <CommandEmpty>No airline found.</CommandEmpty>
@@ -86,7 +84,7 @@ export function AirlineCombobox({
               {filteredAirlines.map((airline) => (
                 <CommandItem
                   key={airline.code}
-                  // The `value` prop for filtering is no longer needed
+
                   onSelect={() => {
                     onChange(airline.code);
                     setOpen(false);

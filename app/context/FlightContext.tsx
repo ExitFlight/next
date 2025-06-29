@@ -3,22 +3,23 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 import {
-  MockFlight,
+  Flight,
   FlightSearchData,
   PassengerDetailsForm,
   FLIGHT_STORAGE_KEY,
   PASSENGER_STORAGE_KEY,
+  GeneratedTicket,
 } from "@/src/types/schema";
 
 interface FlightContextType {
   flightDetails: FlightSearchData | null;
-  selectedFlight: MockFlight | null;
+  selectedFlight: Flight | null;
   passengerDetails: PassengerDetailsForm | null;
-  generatedTicket: any | null;
+  generatedTicket:  GeneratedTicket | null;
   setFlightDetails: (details: FlightSearchData | null) => void;
-  setSelectedFlight: (flight: MockFlight | null) => void;
+  setSelectedFlight: (flight: Flight | null) => void;
   setPassengerDetails: (details: PassengerDetailsForm | null) => void;
-  setGeneratedTicket: (ticket: any | null) => void;
+  setGeneratedTicket: (ticket: GeneratedTicket | null) => void;
   resetFlightContext: () => void;
 }
 
@@ -28,7 +29,7 @@ export const FlightProvider = ({ children }: { children: ReactNode }) => {
   const [flightDetails, setFlightDetails] = useState<FlightSearchData | null>(
     null,
   );
-  const [selectedFlight, setSelectedFlight] = useState<MockFlight | null>(null);
+  const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
   const [passengerDetails, setPassengerDetails] =
     useState<PassengerDetailsForm | null>(null);
   const [generatedTicket, setGeneratedTicket] = useState<any | null>(null);

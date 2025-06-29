@@ -5,7 +5,6 @@ import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 
 import { FlightProvider } from "./context/FlightContext";
-import { TooltipProvider } from "./_components/Tooltips";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
 
@@ -25,13 +24,11 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="font-sans antialiased bg-background text-foreground">
         <FlightProvider>
-          <TooltipProvider>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <main className="flex-grow">{children}</main>
-              <Footer />
-            </div>
-          </TooltipProvider>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </div>
         </FlightProvider>
       </body>
     </html>

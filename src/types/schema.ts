@@ -29,7 +29,7 @@ const airlineSchema = z.object({
 
 export type Airline = z.infer<typeof airlineSchema>;
 
-export const mockFlightSchema = z.object({
+export const flightSchema = z.object({
   flightNumber: z.string(),
   airline: airlineSchema,
   departure: z.object({
@@ -56,7 +56,7 @@ export const mockFlightSchema = z.object({
   class: z.string(),
 });
 
-export type MockFlight = z.infer<typeof mockFlightSchema>;
+export type Flight = z.infer<typeof flightSchema>;
 
 export const airlineTemplateSchema = z.object({
   airlineCode: z.string(),
@@ -76,7 +76,7 @@ export const airlineTemplateSchema = z.object({
 export type AirlineTemplate = z.infer<typeof airlineTemplateSchema>;
 
 export type GeneratedTicket = {
-  flight: MockFlight;
+  flight: Flight;
   passenger: PassengerDetailsForm;
   seatNumber: string;
   bookingReference: string;

@@ -1,16 +1,11 @@
 #!/bin/bash
 
 # --- generate_context.sh ---
-#
-# Traverses a Next.js project directory and consolidates all relevant source
-# code into a single context.txt file for analysis by an AI model.
 
-# --- Configuration ---
-# The name of the final output file.
 OUTPUT_FILE="context.txt"
 
 # List of specific files from the root directory to include.
-# Add or remove files here as needed.
+
 ROOT_FILES=(
   "README.md"
   "package.json"
@@ -25,6 +20,7 @@ ROOT_FILES=(
 SOURCE_DIRS=(
   "app"
   "src"
+  "public"
 )
 
 # --- End Configuration ---

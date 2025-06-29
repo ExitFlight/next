@@ -42,7 +42,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/app/_components/Alert";
 import { useFlightContext } from "@/app/context/FlightContext";
 import { calculateEnhancedFlightDetails } from "@/src/lib/enhancedFlightCalculator";
 import { allAirlines } from "@/src/lib/airlineUtil";
-import { MockFlight, EnhancedFlightDetails, FLIGHT_STORAGE_KEY } from "@/src/types/schema";
+import { Flight, EnhancedFlightDetails, FLIGHT_STORAGE_KEY } from "@/src/types/schema";
 import { formatDistance } from "@/src/lib/helper";
 import allAirports from "@/src/data/airports.json";
 
@@ -238,7 +238,7 @@ const SelectFlightPage = () => {
       name: flightData.airline.name,
     };
 
-    const mockFlight: MockFlight = {
+    const flight: Flight = {
       flightNumber: flightData.flightNumber,
       airline: cleanAirline,
       departure: {
@@ -273,7 +273,7 @@ const SelectFlightPage = () => {
       class: flightData.cabin,
     };
 
-    setSelectedFlight(mockFlight);
+    setSelectedFlight(flight);
     router.push("/passenger-details");
   };
 

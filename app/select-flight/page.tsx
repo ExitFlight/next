@@ -290,7 +290,6 @@ const SelectFlightPage = () => {
         <Card className="border-border bg-card">
           <CardContent className="p-4 md:p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-              {/* Left Column */}
               <div className="space-y-4">
                 <FormElement label="Departure Airport">
                   <AirportCombobox
@@ -344,8 +343,6 @@ const SelectFlightPage = () => {
                   />
                 </FormElement>
               </div>
-
-              {/* Right Column */}
               <div className="space-y-4">
                 <FormElement label="Destination Airport">
                   <AirportCombobox

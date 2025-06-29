@@ -1,19 +1,14 @@
 // src/lib/airlineTemplate.ts
 import { AirlineTemplate } from "@/src/types/schema";
 
-/**
- * Dynamically imports the branding template for a given airline code.
- * Falls back to a default template if a specific one isn't found.
- * @param airlineCode The IATA code of the airline (e.g., "DL", "BA").
- * @returns A promise that resolves to the AirlineTemplate object.
- */
 export async function getAirlineTemplate(
   airlineCode: string,
 ): Promise<AirlineTemplate> {
   const code = airlineCode.toLowerCase();
   try {
-
-    const templateModule = await import(`@/src/lib/airline-templates/${code}.json`);
+    const templateModule = await import(
+      `@/src/lib/airline-templates/${code}.json`
+    );
 
     return templateModule.default as AirlineTemplate;
   } catch (error) {

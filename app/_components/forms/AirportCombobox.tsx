@@ -53,7 +53,6 @@ export function AirportCombobox({
     const searchRegex = new RegExp(`\\b${lowercasedQuery}`, "i");
 
     return airports.filter((airport) => {
-
       const codeMatch = airport.code.toLowerCase().startsWith(lowercasedQuery);
 
       const nameMatch = searchRegex.test(airport.name);
@@ -80,7 +79,6 @@ export function AirportCombobox({
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0" align="start">
         <Command>
-          {/* --- UPDATED: CommandInput now updates our local state --- */}
           <CommandInput
             placeholder="Search by code, name, or city..."
             onValueChange={setSearchQuery}
@@ -88,11 +86,9 @@ export function AirportCombobox({
           <CommandList>
             <CommandEmpty>No airport found.</CommandEmpty>
             <CommandGroup>
-              {/* --- UPDATED: We now map over our custom `filteredAirports` list --- */}
               {filteredAirports.map((airport) => (
                 <CommandItem
                   key={airport.code}
-
                   onSelect={() => {
                     onChange(airport.code);
                     setOpen(false);

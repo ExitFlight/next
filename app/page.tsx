@@ -15,11 +15,9 @@ const Home = () => {
           Create realistic mock flight tickets with our easy-to-use generator.
           Perfect for presentations and novelty use.
         </p>
-        {/* Use the client component for the interactive button */}
         <CreateTicketButton />
       </div>
 
-      {/* Feature Cards Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-10 md:mb-16">
         <FeatureCard
           icon={<Plane size={24} />}
@@ -38,7 +36,6 @@ const Home = () => {
         />
       </div>
 
-      {/* Image Gallery Section */}
       <div className="max-w-4xl mx-auto">
         <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-center text-foreground">
           Ready for your journey?

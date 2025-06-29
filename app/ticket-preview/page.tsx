@@ -52,7 +52,6 @@ const TicketPreviewPage = () => {
   } = useFlightContext();
 
   useEffect(() => {
-
     const generateTicket = async () => {
       if (!selectedFlight || !passengerDetails) {
         router.replace("/");
@@ -60,7 +59,6 @@ const TicketPreviewPage = () => {
       }
 
       if (!generatedTicket) {
-
         const template = await getAirlineTemplate(selectedFlight.airline.code);
 
         const newTicketData: GeneratedTicket = {

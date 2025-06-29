@@ -32,7 +32,6 @@ export const BoardingPass = ({ ticket }: BoardingPassProps) => {
   });
 
   return (
-
     <div
       style={
         {
@@ -46,10 +45,8 @@ export const BoardingPass = ({ ticket }: BoardingPassProps) => {
       <Card className="border-border bg-card boarding-pass shadow-2xl">
         <CardContent className="p-4 md:p-6">
           <div className="flex flex-col sm:flex-row">
-            {/* Left side of the ticket */}
             <div className="flex-1 pb-6 sm:pb-0 sm:pr-6">
               <div className="flex justify-between items-start mb-4">
-                {/* Airline Logo */}
                 <div className="w-12 h-12 flex items-center justify-center rounded-full mr-3 bg-[var(--primary-color)]/10">
                   {template.logoUrl ? (
                     <Image
@@ -126,7 +123,6 @@ export const BoardingPass = ({ ticket }: BoardingPassProps) => {
               </div>
             </div>
 
-            {/* Right side of the ticket (stub) */}
             <div className="flex-1 pt-6 sm:pt-0 sm:pl-6 border-t sm:border-t-0 border-dashed border-border sm:border-l">
               <div className="flex justify-between items-start mb-6">
                 <div>

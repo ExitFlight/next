@@ -72,7 +72,6 @@ export function AirlineCombobox({
       </PopoverTrigger>
       <PopoverContent className="p-0" align="start">
         <Command>
-          {/* --- UPDATED: Input now controls our state --- */}
           <CommandInput
             placeholder="Search airline by name or code..."
             onValueChange={setSearchQuery}
@@ -80,11 +79,9 @@ export function AirlineCombobox({
           <CommandList>
             <CommandEmpty>No airline found.</CommandEmpty>
             <CommandGroup>
-              {/* --- UPDATED: Map over the filtered list --- */}
               {filteredAirlines.map((airline) => (
                 <CommandItem
                   key={airline.code}
-
                   onSelect={() => {
                     onChange(airline.code);
                     setOpen(false);

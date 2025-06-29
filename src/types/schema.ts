@@ -49,7 +49,6 @@ export type GeneratedTicket = {
 };
 
 export interface EnhancedFlightDetails {
-
   departureAirport: string;
   departureAirportName: string;
   arrivalAirport: string;

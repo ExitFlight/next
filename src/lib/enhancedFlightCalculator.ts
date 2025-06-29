@@ -1,9 +1,4 @@
-import {
-  format,
-  addMinutes,
-  differenceInDays,
-  parse,
-} from "date-fns";
+import { format, addMinutes, differenceInDays, parse } from "date-fns";
 import {
   toZonedTime,
   formatInTimeZone,
@@ -17,7 +12,7 @@ import type { Airport } from "@/src/types/schema"; // Using the shared type
 // --- NEW: Create a Map for fast O(1) lookups ---
 // This is much more performant than using array.find() repeatedly.
 const airportDataMap: Map<string, Airport> = new Map(
-  airports.map((airport) => [airport.code, airport as Airport])
+  airports.map((airport) => [airport.code, airport as Airport]),
 );
 
 // --- DELETE THESE CONSTANTS ---
@@ -105,12 +100,12 @@ export async function calculateRealisticFlightTimes(
         `Could not parse input date/time for UTC conversion: "${departureLocalWallTimeString}"`,
       );
     }
-    
+
     const originOffsetMilliseconds = getIANATimezoneOffset(
       originTimezone,
       naiveParsedDate,
     );
-    
+
     const utcMsFromNaiveComponents = Date.UTC(
       naiveParsedDate.getFullYear(),
       naiveParsedDate.getMonth(),
@@ -133,10 +128,14 @@ export async function calculateRealisticFlightTimes(
     }
   } catch (e) {
     console.error(
-      "Error processing departure time:", e,
-      "\nInput date string:", departureDateToUse,
-      "\nInput time string:", departureTimeStrInput,
-      "\nOrigin timezone:", originTimezone,
+      "Error processing departure time:",
+      e,
+      "\nInput date string:",
+      departureDateToUse,
+      "\nInput time string:",
+      departureTimeStrInput,
+      "\nOrigin timezone:",
+      originTimezone,
     );
     throw new Error(
       `Failed to process departure time "${departureDateToUse} ${departureTimeStrInput}" in timezone "${originTimezone}". Original error: ${e instanceof Error ? e.message : String(e)}`,
@@ -200,7 +199,9 @@ export function calculateTimezoneDifference(
       return sign * (hours + minutes / 60);
     } catch (e) {
       console.warn(
-        `Error formatting/parsing offset for timezone ${tz}:`, e, `Falling back to 0 offset.`,
+        `Error formatting/parsing offset for timezone ${tz}:`,
+        e,
+        `Falling back to 0 offset.`,
       );
       return 0;
     }
@@ -273,10 +274,26 @@ export async function calculateEnhancedFlightDetails(
     );
   }
 
-  const departureTimeLocalStr = formatInTimeZone(departureUTC, originTimezone, "HH:mm");
-  const departureDateLocalStr = formatInTimeZone(departureUTC, originTimezone, "yyyy-MM-dd");
-  const arrivalTimeLocalStr = formatInTimeZone(arrivalUTC, destTimezone, "HH:mm");
-  const arrivalDateLocalStr = formatInTimeZone(arrivalUTC, destTimezone, "yyyy-MM-dd");
+  const departureTimeLocalStr = formatInTimeZone(
+    departureUTC,
+    originTimezone,
+    "HH:mm",
+  );
+  const departureDateLocalStr = formatInTimeZone(
+    departureUTC,
+    originTimezone,
+    "yyyy-MM-dd",
+  );
+  const arrivalTimeLocalStr = formatInTimeZone(
+    arrivalUTC,
+    destTimezone,
+    "HH:mm",
+  );
+  const arrivalDateLocalStr = formatInTimeZone(
+    arrivalUTC,
+    destTimezone,
+    "yyyy-MM-dd",
+  );
 
   const tzDiffHours = calculateTimezoneDifference(originTimezone, destTimezone);
   const timezoneDifference = formatTimezoneDifference(tzDiffHours);

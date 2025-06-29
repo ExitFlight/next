@@ -1,11 +1,11 @@
 // app/passenger-details/page.tsx
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, RefreshCcw } from "lucide-react";
+import { ArrowLeft, ArrowRight, RefreshCcw, AlertTriangle } from "lucide-react";
 
 // Component Imports
 import { Button } from "@/app/_components/forms/Button";
@@ -27,6 +27,7 @@ import {
 } from "@/app/_components/forms/Select";
 import { Card, CardContent } from "@/app/_components/Card";
 import ProgressStepper from "@/app/_components/ProgressStepper";
+import { Alert, AlertDescription, AlertTitle } from "@/app/_components/Alert";
 
 // Context and Schema
 import { useFlightContext } from "@/app/context/FlightContext";
@@ -35,19 +36,17 @@ import {
   type PassengerDetailsForm,
 } from "@/src/types/schema";
 
-// --- NEW DATA IMPORT ---
+// Data Imports
 import nationalitiesData from "@/src/data/nationalities.json";
 import titlesData from "@/src/data/titles.json";
 
-// --- Constants ---
+// Constants
 const LOCAL_STORAGE_KEY = "exitFlightPassengerDetails";
 
-const nationalities = [...nationalitiesData].sort((a, b) => 
-  a.label.localeCompare(b.label)
+const nationalities = [...nationalitiesData].sort((a, b) =>
+  a.label.localeCompare(b.label),
 );
-const titles = [...titlesData].sort((a, b) => 
-  a.label.localeCompare(b.label)
-);
+const titles = [...titlesData].sort((a, b) => a.label.localeCompare(b.label));
 
 const emptyFormDefaults: PassengerDetailsForm = {
   title: "",
@@ -59,7 +58,7 @@ const emptyFormDefaults: PassengerDetailsForm = {
   nationality: "",
 };
 
-// --- Helper Functions ---
+// Helper Functions
 const saveToStorage = (details: PassengerDetailsForm) => {
   try {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(details));
@@ -88,6 +87,9 @@ const PassengerDetailsPage = () => {
     setPassengerDetails,
   } = useFlightContext();
 
+  // --- vvv NEW STATE FOR THE ALERT vvv ---
+  const [formError, setFormError] = useState<string | null>(null);
+
   const form = useForm<PassengerDetailsForm>({
     resolver: zodResolver(passengerDetailsSchema),
     defaultValues:
@@ -102,16 +104,27 @@ const PassengerDetailsPage = () => {
     }
   }, [selectedFlight, router]);
 
+  // --- vvv THIS IS THE VALID SUBMISSION HANDLER vvv ---
   const onSubmit = (data: PassengerDetailsForm) => {
+    setFormError(null); // Clear any previous errors on successful submission
     setPassengerDetails(data);
     saveToStorage(data);
     router.push("/ticket-preview");
+  };
+
+  // --- vvv THIS IS THE ERROR HANDLER FOR INVALID SUBMISSION vvv ---
+  const onFormError = (errors: any) => {
+    console.log("Form validation failed:", errors);
+    setFormError(
+      "Please correct the errors highlighted below before continuing.",
+    );
   };
 
   const handleReset = () => {
     form.reset(emptyFormDefaults);
     localStorage.removeItem(LOCAL_STORAGE_KEY);
     setPassengerDetails(null);
+    setFormError(null); // Also clear the alert on reset
   };
 
   return (
@@ -134,8 +147,9 @@ const PassengerDetailsPage = () => {
         <Card className="border-border bg-card">
           <CardContent className="p-4 md:p-6">
             <Form {...form}>
+              {/* --- vvv UPDATED handleSubmit CALL vvv --- */}
               <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(onSubmit, onFormError)}
                 className="space-y-6"
               >
                 <FormField
@@ -143,7 +157,7 @@ const PassengerDetailsPage = () => {
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Title (Optional)</FormLabel>
+                      <FormLabel>Title</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
@@ -273,6 +287,14 @@ const PassengerDetailsPage = () => {
                     </FormItem>
                   )}
                 />
+
+                {formError && (
+                  <Alert variant="destructive" className="mt-6">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertTitle>Validation Error</AlertTitle>
+                    <AlertDescription>{formError}</AlertDescription>
+                  </Alert>
+                )}
 
                 <div className="mt-8 flex justify-between">
                   <Button

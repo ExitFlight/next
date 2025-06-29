@@ -53,15 +53,15 @@ export function AirportCombobox({
     }
 
     const lowercasedQuery = searchQuery.toLowerCase();
-    
+
     // This regex looks for the query at the beginning of a word boundary (\b)
     // It's case-insensitive ('i')
-    const searchRegex = new RegExp(`\\b${lowercasedQuery}`, 'i');
+    const searchRegex = new RegExp(`\\b${lowercasedQuery}`, "i");
 
     return airports.filter((airport) => {
       // Test 1: Does the IATA code start with the query? (e.g., "LAX")
       const codeMatch = airport.code.toLowerCase().startsWith(lowercasedQuery);
-      
+
       // Test 2: Does the name or city match the regex? (e.g., "New" for "New York", "Kennedy" for "JFK")
       const nameMatch = searchRegex.test(airport.name);
       const cityMatch = searchRegex.test(airport.city);

@@ -8,8 +8,11 @@ import {
   Plane,
   Calendar as CalendarIcon,
   RefreshCcw,
+  AlertTriangle,
 } from "lucide-react";
 import { format } from "date-fns";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
 
 // Component Imports
 import { Button } from "@/app/_components/forms/Button";
@@ -21,7 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/app/_components/forms/Select";
-import { Calendar } from "@/app/_components/forms/Calendar";
 import {
   Popover,
   PopoverContent,
@@ -33,6 +35,8 @@ import { Label } from "@/app/_components/forms/Label";
 import { Badge } from "@/app/_components/Badge";
 import ProgressStepper from "@/app/_components/ProgressStepper";
 import { AirportCombobox } from "@/app/_components/forms/AirportCombobox";
+import { AirlineCombobox } from "@/app/_components/forms/AirlineCombobox";
+import { Alert, AlertDescription, AlertTitle } from "@/app/_components/Alert"; // <-- Import Alert components
 
 // Context and Utils
 import { useFlightContext } from "@/app/context/FlightContext";
@@ -118,7 +122,9 @@ const SelectFlightPage = () => {
   };
 
   const handleDateChange = (date: Date | undefined) => {
-    if (date) handleFormChange("departureDate", format(date, "yyyy-MM-dd"));
+    if (date) {
+      handleFormChange("departureDate", format(date, "yyyy-MM-dd"));
+    }
     setIsDepartureCalendarOpen(false);
   };
 
@@ -146,24 +152,27 @@ const SelectFlightPage = () => {
       flightNumberDigits,
     } = formState;
 
+    setError(""); // Reset error on every attempt
+
+    // --- vvv THIS IS THE CHANGE vvv ---
     if (
       !departureAirport ||
       !destinationAirport ||
       !selectedAirline ||
       !/^\d{1,5}$/.test(flightNumberDigits)
     ) {
-      alert(
+      setError(
         "Please fill all required fields: Airports, Airline, and a valid Flight Number (1-5 digits).",
       );
-      return;
+      return; // Stop execution
     }
     if (departureAirport === destinationAirport) {
-      alert("Departure and destination airports cannot be the same.");
-      return;
+      setError("Departure and destination airports cannot be the same.");
+      return; // Stop execution
     }
+    // --- ^^^ THIS IS THE CHANGE ^^^ ---
 
     setIsLoading(true);
-    setError("");
     setFlightData(null);
 
     try {
@@ -176,7 +185,7 @@ const SelectFlightPage = () => {
       );
 
       const airlineInfo = allAirlines.find((a) => a.code === selectedAirline);
-      
+
       const departureAirportInfo = allAirports.find(
         (a) => a.code === departureAirport,
       );
@@ -196,7 +205,7 @@ const SelectFlightPage = () => {
       const enhancedFlightData: EnhancedFlightDetails = {
         ...calculatedData,
         departureAirport,
-        departureAirportName: departureAirportInfo.name, 
+        departureAirportName: departureAirportInfo.name,
         arrivalAirport: destinationAirport,
         arrivalAirportName: destinationAirportInfo.name,
         departureTime: departureTimeInput,
@@ -226,7 +235,6 @@ const SelectFlightPage = () => {
       departureTime: flightData.departureTime,
       calculatedFlightData: flightData,
     });
-
     const mockFlight: MockFlight = {
       flightNumber: flightData.flightNumber,
       airline: {
@@ -238,8 +246,12 @@ const SelectFlightPage = () => {
         airport: {
           code: flightData.departureAirport,
           name: flightData.departureAirportName,
-          city: allAirports.find(a => a.code === flightData.departureAirport)?.city || "",
-          country: allAirports.find(a => a.code === flightData.departureAirport)?.country || "N/A",
+          city:
+            allAirports.find((a) => a.code === flightData.departureAirport)
+              ?.city || "",
+          country:
+            allAirports.find((a) => a.code === flightData.departureAirport)
+              ?.country || "N/A",
         },
         time: flightData.departureTimeLocal,
         date: flightData.departureDateLocal,
@@ -248,8 +260,12 @@ const SelectFlightPage = () => {
         airport: {
           code: flightData.arrivalAirport,
           name: flightData.arrivalAirportName,
-          city: allAirports.find(a => a.code === flightData.arrivalAirport)?.city || "",
-          country: allAirports.find(a => a.code === flightData.arrivalAirport)?.country || "N/A",
+          city:
+            allAirports.find((a) => a.code === flightData.arrivalAirport)
+              ?.city || "",
+          country:
+            allAirports.find((a) => a.code === flightData.arrivalAirport)
+              ?.country || "N/A",
         },
         time: flightData.arrivalTimeLocal,
         date: flightData.arrivalDateLocal,
@@ -264,7 +280,6 @@ const SelectFlightPage = () => {
   const departureDateAsDate = new Date(formState.departureDate + "T00:00:00");
 
   return (
-    // ... JSX is unchanged, no need to include it all again ...
     <div className="container mx-auto px-4 py-6 md:py-8">
       <ProgressStepper currentStep={1} />
       <div className="max-w-4xl mx-auto">
@@ -306,7 +321,7 @@ const SelectFlightPage = () => {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
-                      <Calendar
+                      <DayPicker
                         mode="single"
                         selected={departureDateAsDate}
                         onSelect={handleDateChange}
@@ -319,23 +334,14 @@ const SelectFlightPage = () => {
                   </Popover>
                 </FormElement>
                 <FormElement label="Airline">
-                  <Select
+                  <AirlineCombobox
+                    airlines={allAirlines}
                     value={formState.selectedAirline}
-                    onValueChange={(v: string) =>
-                      handleFormChange("selectedAirline", v)
+                    onChange={(value: string) =>
+                      handleFormChange("selectedAirline", value)
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select airline" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {allAirlines.map((a) => (
-                        <SelectItem key={a.code} value={a.code}>
-                          {a.code} - {a.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    placeholder="Select airline..."
+                  />
                 </FormElement>
               </div>
 
@@ -447,16 +453,22 @@ const SelectFlightPage = () => {
                 {isLoading ? "Generating Preview..." : "Preview Ticket"}
               </Button>
             </div>
+            {/* --- vvv THIS IS THE CHANGE vvv --- */}
             {error && (
-              <div className="mt-4 p-3 bg-destructive/10 text-destructive rounded-md text-sm">
-                {error}
+              <div className="mt-6">
+                <Alert variant="destructive">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
               </div>
             )}
+            {/* --- ^^^ THIS IS THE CHANGE ^^^ --- */}
           </CardContent>
         </Card>
 
         {flightData && (
-          <Card ref={ticketPreviewRef} className="border-border bg-card">
+          <Card ref={ticketPreviewRef} className="border-border bg-card mt-8">
             <CardContent className="p-4 md:p-6">
               <div className="mb-4 flex justify-between items-center">
                 <div className="flex items-center">
@@ -503,9 +515,11 @@ const SelectFlightPage = () => {
                   <div className="text-xs text-muted-foreground mb-1">
                     {flightData.durationFormatted}
                   </div>
-                  <div className="relative w-full">
+                  <div className="relative w-full flex items-center">
                     <div className="h-0.5 bg-primary w-full"></div>
-                    <Plane className="absolute -top-2 right-0 h-4 w-4 text-primary rotate-90" />
+                    <div>
+                      <Plane className="h-4 w-4 text-primary" />
+                    </div>
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">
                     {formatDistance(flightData.distanceKm)}

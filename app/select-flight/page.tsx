@@ -42,7 +42,11 @@ import { Alert, AlertDescription, AlertTitle } from "@/app/_components/Alert";
 import { useFlightContext } from "@/app/context/FlightContext";
 import { calculateEnhancedFlightDetails } from "@/src/lib/enhancedFlightCalculator";
 import { allAirlines } from "@/src/lib/airlineUtil";
-import { Flight, EnhancedFlightDetails, FLIGHT_STORAGE_KEY } from "@/src/types/schema";
+import {
+  Flight,
+  EnhancedFlightDetails,
+  FLIGHT_STORAGE_KEY,
+} from "@/src/types/schema";
 import { formatDistance } from "@/src/lib/helper";
 import allAirports from "@/src/data/airports.json";
 
@@ -70,20 +74,33 @@ interface FlightFormState {
   selectedCabin: string;
 }
 
+const defaultFormState: FlightFormState = {
+  departureAirport: "",
+  destinationAirport: "",
+  departureDate: format(new Date(), "yyyy-MM-dd"),
+  departureHour: "09",
+  departureMinute: "00",
+  selectedAirline: "",
+  flightNumberDigits: "123",
+  selectedCabin: "economy",
+};
+
 const SelectFlightPage = () => {
   const router = useRouter();
   const { setFlightDetails, setSelectedFlight } = useFlightContext();
   const ticketPreviewRef = useRef<HTMLDivElement>(null);
 
-  const [formState, setFormState] = useState<FlightFormState>({
-    departureAirport: "",
-    destinationAirport: "",
-    departureDate: format(new Date(), "yyyy-MM-dd"),
-    departureHour: "09",
-    departureMinute: "00",
-    selectedAirline: "",
-    flightNumberDigits: "123",
-    selectedCabin: "economy",
+  const [formState, setFormState] = useState<FlightFormState>(() => {
+    if (typeof window === "undefined") {
+      return defaultFormState;
+    }
+    try {
+      const savedState = localStorage.getItem(FLIGHT_STORAGE_KEY);
+      return savedState ? JSON.parse(savedState) : defaultFormState;
+    } catch (e) {
+      console.error("Failed to load state from localStorage", e);
+      return defaultFormState;
+    }
   });
 
   const [flightData, setFlightData] = useState<EnhancedFlightDetails | null>(
@@ -95,12 +112,6 @@ const SelectFlightPage = () => {
 
   useEffect(() => {
     document.title = "Select Flight - ExitFlight";
-    try {
-      const savedState = localStorage.getItem(FLIGHT_STORAGE_KEY);
-      if (savedState) setFormState(JSON.parse(savedState));
-    } catch (e) {
-      console.error("Failed to load state from localStorage", e);
-    }
   }, []);
 
   useEffect(() => {
@@ -129,16 +140,7 @@ const SelectFlightPage = () => {
 
   const handleResetAll = () => {
     localStorage.removeItem(FLIGHT_STORAGE_KEY);
-    setFormState({
-      departureAirport: "",
-      destinationAirport: "",
-      departureDate: format(new Date(), "yyyy-MM-dd"),
-      departureHour: "09",
-      departureMinute: "00",
-      selectedAirline: "",
-      flightNumberDigits: "123",
-      selectedCabin: "economy",
-    });
+    setFormState(defaultFormState);
     setFlightData(null);
     setError("");
   };

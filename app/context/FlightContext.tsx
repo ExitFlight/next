@@ -15,7 +15,7 @@ interface FlightContextType {
   flightDetails: FlightSearchData | null;
   selectedFlight: Flight | null;
   passengerDetails: PassengerDetailsForm | null;
-  generatedTicket:  GeneratedTicket | null;
+  generatedTicket: GeneratedTicket | null;
   setFlightDetails: (details: FlightSearchData | null) => void;
   setSelectedFlight: (flight: Flight | null) => void;
   setPassengerDetails: (details: PassengerDetailsForm | null) => void;

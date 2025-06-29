@@ -20,7 +20,6 @@ ROOT_FILES=(
 SOURCE_DIRS=(
   "app"
   "src"
-  "public"
 )
 
 # --- End Configuration ---
@@ -53,7 +52,7 @@ for file in "${ROOT_FILES[@]}"; do
 done
 
 # 2. Process all files in the source directories
-echo "[2/2] Processing source directories (app/, src/)..."
+echo "[2/2] Processing sou  "public"rce directories (app/, src/)..."
 for dir in "${SOURCE_DIRS[@]}"; do
   if [ -d "$dir" ]; then
     # Use find to recursively get all files in the directory.
@@ -67,6 +66,9 @@ for dir in "${SOURCE_DIRS[@]}"; do
   fi
 done
 
+tree public/ >> "$OUTPUT_FILE"
+
 echo "-------------------------------------------------"
 echo "✅ Success! Project context has been generated in $OUTPUT_FILE"
 echo "You can now copy the contents of that file and paste it into our chat."
+

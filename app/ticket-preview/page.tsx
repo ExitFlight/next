@@ -3,7 +3,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Plane, Download, Plus } from "lucide-react";
+import { Plane, Download, Plus, ArrowLeft } from "lucide-react";
 
 import { Button } from "@/app/_components/forms/Button";
 import { Card, CardContent } from "@/app/_components/Card";
@@ -102,7 +102,7 @@ const TicketPreviewPage = () => {
     );
   }
 
-  console.log('generatedTicket:', generatedTicket)
+  console.log("generatedTicket:", generatedTicket);
 
   return (
     <div className="container mx-auto px-4 py-6 md:py-8">
@@ -116,13 +116,19 @@ const TicketPreviewPage = () => {
           {/* <BoardingPass ticket={generatedTicket} /> */}
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <Button onClick={handleDownload} size="lg">
-            <Download className="mr-2" size={16} /> Download Ticket
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+          <Button onClick={() => router.back()} size="lg" variant="outline">
+            <ArrowLeft className="mr-2" size={16} /> Back
           </Button>
-          <Button onClick={handleCreateAnother} size="lg" variant="outline">
-            <Plus className="mr-2" size={16} /> Create Another Ticket
-          </Button>
+
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <Button onClick={handleDownload} size="lg">
+              <Download className="mr-2" size={16} /> Download Ticket
+            </Button>
+            <Button onClick={handleCreateAnother} size="lg" variant="outline">
+              <Plus className="mr-2" size={16} /> Create Another Ticket
+            </Button>
+          </div>
         </div>
       </div>
     </div>

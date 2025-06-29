@@ -41,7 +41,6 @@ import {
 import nationalitiesData from "@/src/data/nationalities.json";
 import titlesData from "@/src/data/titles.json";
 
-
 const nationalities = [...nationalitiesData].sort((a, b) =>
   a.label.localeCompare(b.label),
 );
@@ -86,7 +85,6 @@ const PassengerDetailsPage = () => {
     setPassengerDetails,
   } = useFlightContext();
 
-  // --- vvv NEW STATE FOR THE ALERT vvv ---
   const [formError, setFormError] = useState<string | null>(null);
 
   const form = useForm<PassengerDetailsForm>({
@@ -103,15 +101,13 @@ const PassengerDetailsPage = () => {
     }
   }, [selectedFlight, router]);
 
-  // --- vvv THIS IS THE VALID SUBMISSION HANDLER vvv ---
   const onSubmit = (data: PassengerDetailsForm) => {
-    setFormError(null); // Clear any previous errors on successful submission
+    setFormError(null);
     setPassengerDetails(data);
     saveToStorage(data);
     router.push("/ticket-preview");
   };
 
-  // --- vvv THIS IS THE ERROR HANDLER FOR INVALID SUBMISSION vvv ---
   const onFormError = (errors: any) => {
     console.log("Form validation failed:", errors);
     setFormError(
@@ -123,7 +119,7 @@ const PassengerDetailsPage = () => {
     form.reset(emptyFormDefaults);
     localStorage.removeItem(PASSENGER_STORAGE_KEY);
     setPassengerDetails(null);
-    setFormError(null); // Also clear the alert on reset
+    setFormError(null);
   };
 
   return (
@@ -134,19 +130,10 @@ const PassengerDetailsPage = () => {
           <h2 className="text-xl md:text-2xl font-semibold text-foreground">
             Passenger Details
           </h2>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleReset}
-            className="text-muted-foreground hover:text-destructive"
-          >
-            <RefreshCcw className="mr-2 h-4 w-4" /> Reset Form
-          </Button>
         </div>
         <Card className="border-border bg-card">
           <CardContent className="p-4 md:p-6">
             <Form {...form}>
-              {/* --- vvv UPDATED handleSubmit CALL vvv --- */}
               <form
                 onSubmit={form.handleSubmit(onSubmit, onFormError)}
                 className="space-y-6"
@@ -159,7 +146,7 @@ const PassengerDetailsPage = () => {
                       <FormLabel>Title</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -267,7 +254,7 @@ const PassengerDetailsPage = () => {
                       <FormLabel>Nationality *</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -296,13 +283,23 @@ const PassengerDetailsPage = () => {
                 )}
 
                 <div className="mt-8 flex justify-between">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => router.back()}
-                  >
-                    <ArrowLeft className="mr-2" size={16} /> Back
-                  </Button>
+                  <div className="flex gap-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => router.back()}
+                    >
+                      <ArrowLeft className="mr-2" size={16} /> Back
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleReset}
+                      className="text-muted-foreground border-muted hover:text-destructive"
+                    >
+                      <RefreshCcw className="mr-2 h-4 w-4" /> Reset Form
+                    </Button>
+                  </div>
                   <Button type="submit">
                     Continue to Preview{" "}
                     <ArrowRight className="ml-2" size={16} />

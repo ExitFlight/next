@@ -1,7 +1,7 @@
 // app/_components/BoardingPass.tsx
 "use client";
 
-import { Plane } from "lucide-react";
+import { ArrowBigRight, Plane } from "lucide-react";
 import Image from "next/image";
 import { Card, CardContent } from "@/app/_components/Card";
 import { type GeneratedTicket } from "@/src/types/schema";
@@ -31,13 +31,52 @@ export const BoardingPass = ({ ticket }: BoardingPassProps) => {
     year: "numeric",
   });
 
-  console.log('airline code:', flight.airline.code)
+  console.log("airline code:", flight.airline.code);
 
-  if ( flight.airline.code === 'AA' ) {
-    return <div className="flex">
-      <div><Image src="/barcode.png" alt="Ticket Barcode" className="rotate-90"/></div>
-
-    </div>
+  if (flight.airline.code === "AA") {
+    return (
+      <div className="flex h-75">
+        <div className="items-stretch">
+          <Image
+            src="/aa/barcode.png"
+            alt="Ticket Barcode"
+            width="100"
+            height="291"
+          />
+        </div>
+        <div className="w-400 bg-[#1A237E] flex flex-col">
+          <div className="flex">
+            <div className="flex flex-col">
+              <div>{flight.departure.airport.code}</div>
+              <div>{flight.departure.airport.city}</div>
+            </div>
+            <div>
+              <ArrowBigRight />
+            </div>
+            <div className="flex flex-col">
+              <div>{flight.arrival.airport.code}</div>
+              <div>{flight.arrival.airport.city}</div>
+            </div>
+          </div>
+          <div>
+            <Image
+              src="/aa/qrcode-aa.png"
+              alt="Ticket QRCODE"
+              width="200"
+              height="200"
+            />
+          </div>
+        </div>
+        <div className="w-400 bg-white">
+          <Image
+            src="/logos/aa.svg"
+            width="1320"
+            height="299"
+            alt="America Airlines Logo"
+          />
+        </div>
+      </div>
+    );
   }
 
   return (

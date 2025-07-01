@@ -31,8 +31,8 @@ export default function RootLayout({
           </div>
         </FlightProvider>
         {process.env.RELEASE_ENV &&
-          process.env.RELEASE_ENV === 'production' && <GoogleAnalytics />}
-      </body>      
+          process.env.RELEASE_ENV === "production" && <GoogleAnalytics />}
+      </body>
     </html>
   );
 }

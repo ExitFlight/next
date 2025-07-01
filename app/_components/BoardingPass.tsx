@@ -31,6 +31,15 @@ export const BoardingPass = ({ ticket }: BoardingPassProps) => {
     year: "numeric",
   });
 
+  console.log('airline code:', flight.airline.code)
+
+  if ( flight.airline.code === 'AA' ) {
+    return <div className="flex">
+      <div><Image src="/barcode.png" alt="Ticket Barcode" className="rotate-90"/></div>
+
+    </div>
+  }
+
   return (
     <div
       style={

@@ -7,6 +7,7 @@ import "./globals.css";
 import { FlightProvider } from "./context/FlightContext";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
+import GoogleAnalytics from "./_components/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: "ExitFlight Ticket Generator",
@@ -29,7 +30,9 @@ export default function RootLayout({
             <Footer />
           </div>
         </FlightProvider>
-      </body>
+        {process.env.RELEASE_ENV &&
+          process.env.RELEASE_ENV === 'production' && <GoogleAnalytics />}
+      </body>      
     </html>
   );
 }
